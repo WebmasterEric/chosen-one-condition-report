@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport"content="width=device-width, initial-scale=1.0" />
   <title>Chosen One Condition Report</title>
   <style>
     :root {
@@ -38,11 +38,128 @@
       padding: 16px;
     }
 
-    .report-shell {
+    .app-shell {
       width: 100%;
-      max-width: 720px;
+      max-width: 780px;
       margin: 0 auto;
     }
+
+    /* INPUT PANEL */
+
+    .input-card {
+      background: rgba(15, 23, 42, 0.86);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 14px 14px 14px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .input-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top left,
+        rgba(56, 189, 248, 0.18),
+        transparent 60%
+      );
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .input-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .input-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-strong);
+      margin-bottom: 4px;
+    }
+
+    .input-sub {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-bottom: 10px;
+    }
+
+    .input-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    @media (min-width: 640px) {
+      .input-row {
+        flex-direction: row;
+      }
+    }
+
+    .field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .field input,
+    .field select {
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 7px 11px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-generate {
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.7);
+      background: linear-gradient(
+        135deg,
+        rgba(56, 189, 248, 0.16),
+        rgba(56, 189, 248, 0.35)
+      );
+      padding: 7px 18px;
+      font-size: 0.86rem;
+      color: #ecfeff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-generate span.icon {
+      font-size: 0.95rem;
+    }
+
+    /* REPORT CARD */
 
     .report-card {
       background: var(--card-bg);
@@ -52,6 +169,7 @@
       padding: 20px 18px 22px;
       position: relative;
       overflow: hidden;
+      display: none; /* shown after generation */
     }
 
     .report-card::before {
@@ -288,11 +406,56 @@
         font-size: 1.45rem;
       }
     }
+
+    .placeholder-message {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
-  <main class="report-shell">
-    <article class="report-card">
+  <main class="app-shell">
+    <!-- INPUT CARD -->
+    <section class="input-card">
+      <div class="input-inner">
+        <div class="input-title">Chosen One Condition Report</div>
+        <div class="input-sub">
+          Enter your birthdate and current time window. This generates a
+          conditions briefing based on natural law, numerology, and emotional
+          patterning. It does not predict the future.
+        </div>
+        <form id="reportForm">
+          <div class="input-row">
+            <div class="field">
+              <label for="birthdate">Birthdate</label>
+              <input id="birthdate" type="date" required />
+            </div>
+            <div class="field">
+              <label for="mode">Time Window</label>
+              <select id="mode" required>
+                <option value="morning">Morning</option>
+                <option value="afternoon">Afternoon</option>
+                <option value="night">Night</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="submit" class="btn-generate">
+              <span class="icon">✦</span>
+              <span>Generate Report</span>
+            </button>
+          </div>
+          <div class="placeholder-message" id="placeholderMsg">
+            Your report will appear below. You can screenshot it, read it aloud,
+            or save it for later.
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- REPORT CARD -->
+    <article class="report-card" id="reportCard">
       <div class="report-inner">
         <!-- HEADER -->
         <header class="report-header">
@@ -300,18 +463,17 @@
             <span class="icon">⟡</span>
             <span>Chosen One Condition Report</span>
           </div>
-          <h1 class="report-title">
-            {{REPORT_TITLE}}
-          </h1>
+          <h1 class="report-title" id="reportTitle"></h1>
           <p class="report-subtitle">
             Tuned to your birthdate and current conditions. Not a prediction —
             a briefing.
           </p>
           <div class="report-meta">
-            <span>📅 {{REPORT_DATE}}</span>
-            <span>⏱ {{REPORT_WINDOW}}</span>
-            <span>☾ {{MOON_PHASE}}</span>
-            <span>№ {{DESTINY_NUMBER}} • {{ELEMENT_LABEL}}</span>
+            <span>📅 <span id="reportDate"></span></span>
+            <span>⏱ <span id="reportWindow"></span></span>
+            <span>☾ <span id="moonPhase"></span></span>
+            <span>☉ <span id="zodiacSign"></span></span>
+            <span>№ <span id="destinyNumberMeta"></span> • <span id="elementLabel"></span></span>
           </div>
         </header>
 
@@ -323,12 +485,13 @@
           </div>
           <div class="section-body">
             <div class="pill-row">
-              <span class="pill"><strong>Destiny:</strong> {{DESTINY_ARCHETYPE}}</span>
-              <span class="pill"><strong>Element:</strong> {{ELEMENT_DESCRIPTION}}</span>
-              <span class="pill"><strong>Center:</strong> {{CENTER_TYPE}}</span>
+              <span class="pill"><strong>Destiny:</strong> <span id="destinyArchetype"></span></span>
+              <span class="pill"><strong>Element:</strong> <span id="elementDescription"></span></span>
+              <span class="pill"><strong>Center:</strong> <span id="centerType"></span></span>
+              <span class="pill"><strong>Core Drive:</strong> <span id="coreDrive"></span></span>
             </div>
-            <p>{{CORE_BLUEPRINT_SUMMARY}}</p>
-            <p>{{CORE_STRENGTHS_WEAKNESSES}}</p>
+            <p id="coreBlueprintSummary"></p>
+            <p id="coreStrengthsWeaknesses"></p>
           </div>
         </section>
 
@@ -339,19 +502,19 @@
             <span>Conditions Around You</span>
           </div>
           <div class="section-body">
-            <p>{{CONDITIONS_OVERVIEW}}</p>
+            <p id="conditionsOverview"></p>
             <ul>
               <li>
                 <span class="bullet">•</span>
-                <span>{{CONDITION_POINT_1}}</span>
+                <span id="cond1"></span>
               </li>
               <li>
                 <span class="bullet">•</span>
-                <span>{{CONDITION_POINT_2}}</span>
+                <span id="cond2"></span>
               </li>
               <li>
                 <span class="bullet">•</span>
-                <span>{{CONDITION_POINT_3}}</span>
+                <span id="cond3"></span>
               </li>
             </ul>
           </div>
@@ -365,20 +528,21 @@
           </div>
           <div class="section-body">
             <div class="pill-row">
-              <span class="pill"><strong>Shadow:</strong> {{SHADOW_NAME}}</span>
-              <span class="pill"><strong>Test:</strong> {{TEST_NAME}}</span>
-              <span class="pill"><strong>Emotion:</strong> {{EMOTION_NAME}}</span>
+              <span class="pill"><strong>Shadow:</strong> <span id="shadowName"></span></span>
+              <span class="pill"><strong>Test:</strong> <span id="testName"></span></span>
+              <span class="pill"><strong>Emotion:</strong> <span id="emotionName"></span></span>
             </div>
-            <p>{{SHADOW_EXPLANATION}}</p>
-            <p>{{TEST_EXPLANATION}}</p>
+            <p id="shadowExplanation"></p>
+            <p id="testExplanation"></p>
+            <p id="exposurePattern"></p>
             <ul>
               <li>
                 <span class="bullet">→</span>
-                <span>{{COUNTERMEASURE_1}}</span>
+                <span id="counter1"></span>
               </li>
               <li>
                 <span class="bullet">→</span>
-                <span>{{COUNTERMEASURE_2}}</span>
+                <span id="counter2"></span>
               </li>
             </ul>
           </div>
@@ -391,22 +555,22 @@
             <span>Support Kit</span>
           </div>
           <div class="section-body">
-            <p>{{SUPPORT_INTRO}}</p>
+            <p id="supportIntro"></p>
             <div class="support-grid">
               <div class="support-card">
                 <div class="support-title">Crystal</div>
-                <div class="support-main">{{CRYSTAL_PRIMARY}}</div>
-                <div class="support-note">{{CRYSTAL_NOTE}}</div>
+                <div class="support-main" id="crystalPrimary"></div>
+                <div class="support-note" id="crystalNote"></div>
               </div>
               <div class="support-card">
                 <div class="support-title">Scent / Candle</div>
-                <div class="support-main">{{SCENT_PRIMARY}}</div>
-                <div class="support-note">{{SCENT_NOTE}}</div>
+                <div class="support-main" id="scentPrimary"></div>
+                <div class="support-note" id="scentNote"></div>
               </div>
               <div class="support-card">
                 <div class="support-title">Micro-Action</div>
-                <div class="support-main">{{ACTION_PRIMARY}}</div>
-                <div class="support-note">{{ACTION_NOTE}}</div>
+                <div class="support-main" id="actionPrimary"></div>
+                <div class="support-note" id="actionNote"></div>
               </div>
             </div>
           </div>
@@ -420,12 +584,569 @@
             more awareness, not more fear.
           </div>
           <div>
-            Built on natural law, emotional patterning, and numerology — for
+            Built on natural law, behavioral patterns, and numerology — for
             Chosen Ones learning to navigate their own power.
           </div>
         </footer>
       </div>
     </article>
   </main>
+
+  <script>
+    function hashString(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = (h * 31 + str.charCodeAt(i)) | 0;
+      }
+      return Math.abs(h);
+    }
+
+    function reduceToDigit(n) {
+      while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
+        n = n
+          .toString()
+          .split("")
+          .reduce((sum, d) => sum + parseInt(d, 10), 0);
+      }
+      return n;
+    }
+
+    function getLifePath(date) {
+      const digits = date.replace(/[^0-9]/g, "").split("");
+      const sum = digits.reduce((s, d) => s + parseInt(d, 10), 0);
+      return reduceToDigit(sum);
+    }
+
+    function getZodiac(month, day) {
+      const m = month;
+      const d = day;
+      if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return "Aries";
+      if ((m === 4 && d >= 20) || (m === 5 && d <= 20)) return "Taurus";
+      if ((m === 5 && d >= 21) || (m === 6 && d <= 20)) return "Gemini";
+      if ((m === 6 && d >= 21) || (m === 7 && d <= 22)) return "Cancer";
+      if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return "Leo";
+      if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return "Virgo";
+      if ((m === 9 && d >= 23) || (m === 10 && d <= 22)) return "Libra";
+      if ((m === 10 && d >= 23) || (m === 11 && d <= 21)) return "Scorpio";
+      if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return "Sagittarius";
+      if ((m === 12 && d >= 22) || (m === 1 && d <= 19)) return "Capricorn";
+      if ((m === 1 && d >= 20) || (m === 2 && d <= 18)) return "Aquarius";
+      return "Pisces";
+    }
+
+    function getElement(sign) {
+      const fire = ["Aries", "Leo", "Sagittarius"];
+      const earth = ["Taurus", "Virgo", "Capricorn"];
+      const air = ["Gemini", "Libra", "Aquarius"];
+      const water = ["Cancer", "Scorpio", "Pisces"];
+      if (fire.includes(sign)) return "Fire";
+      if (earth.includes(sign)) return "Earth";
+      if (air.includes(sign)) return "Air";
+      return "Water";
+    }
+
+    function getCenterType(lifePath) {
+      if ([1, 8, 9].includes(lifePath)) return "Body / Action";
+      if ([2, 3, 4].includes(lifePath)) return "Heart / Feeling";
+      if ([5, 6, 7].includes(lifePath)) return "Head / Thinking";
+      if ([11, 22, 33].includes(lifePath)) return "Integrated / Hybrid";
+      return "Mixed";
+    }
+
+    function getDestinyArchetype(lifePath) {
+      const map = {
+        1: "Initiator — self-led, trail-cutting energy",
+        2: "Balancer — relational, sensitive, peace-bringing",
+        3: "Communicator — creative, expressive, story-driven",
+        4: "Builder — stable, structured, foundation-focused",
+        5: "Changer — adaptive, disruptive, freedom-seeking",
+        6: "Guardian — responsible, caring, protector energy",
+        7: "Seer — analytical, intuitive, pattern-tracking",
+        8: "Architect — power, impact, system-level thinking",
+        9: "Releaser — compassionate, closure and completion",
+        11: "Amplifier — heightened perception and intuition",
+        22: "Master Builder — vision plus practical execution",
+        33: "Healer — service, compassion, emotional leadership",
+      };
+      return map[lifePath] || "Adaptive Chosen One blueprint";
+    }
+
+    function getElementDescription(element) {
+      const map = {
+        Fire: "Action-oriented, direct, energized by motion and challenge.",
+        Earth:
+          "Grounded, practical, steady, strengthened by routine and tangible progress.",
+        Air: "Mental, communicative, curious, strengthened by clarity and ideas.",
+        Water:
+          "Emotional, intuitive, deep-feeling, strengthened by honest processing.",
+      };
+      return map[element] || "";
+    }
+
+    function getCoreDrive(lifePath) {
+      // Enneagram-inspired, but framed as "drive"
+      const mod = lifePath % 9 || 9;
+      const map = {
+        1: "Integrity & improvement — wanting things to be right, not sloppy.",
+        2: "Connection & being needed — wanting to feel useful and valued.",
+        3: "Achievement & image — wanting your effort to actually show.",
+        4: "Authenticity & depth — rejecting anything that feels fake.",
+        5: "Understanding & competence — wanting to really know, not guess.",
+        6: "Safety & loyalty — wanting solid people and clear signals.",
+        7: "Possibility & stimulation — wanting life to stay open and alive.",
+        8: "Control & protection — wanting to guard yourself and your people.",
+        9: "Harmony & peace — wanting low chaos and honest calm around you.",
+      };
+      return map[mod] || "Balanced drive that shifts based on context.";
+    }
+
+    function getMoonPhaseName(dateObj) {
+      const reference = new Date(Date.UTC(2000, 0, 6)); // Jan 6, 2000
+      const diff = dateObj.getTime() - reference.getTime();
+      const days = diff / (1000 * 60 * 60 * 24);
+      const synodicMonth = 29.53058867;
+      let phase = (days % synodicMonth) / synodicMonth;
+      if (phase < 0) phase += 1;
+      const index = Math.round(phase * 8) % 8;
+      const names = [
+        "New Moon (reset cycle)",
+        "Waxing Crescent (building quietly)",
+        "First Quarter (turning point)",
+        "Waxing Gibbous (momentum rising)",
+        "Full Moon (emotionally amplified)",
+        "Waning Gibbous (processing and review)",
+        "Last Quarter (decision point)",
+        "Waning Crescent (release and rest)",
+      ];
+      return names[index];
+    }
+
+    function getTimeWindow(mode) {
+      if (mode === "morning")
+        return "06:00 – 11:59 • Morning integration field";
+      if (mode === "afternoon")
+        return "12:00 – 17:59 • Active decision-making field";
+      return "18:00 – 02:00 • Reflection and recalibration field";
+    }
+
+    function pickDeterministic(list, hashSeed, offset) {
+      if (!list.length) return "";
+      const idx = (hashSeed + offset) % list.length;
+      return list[idx];
+    }
+
+    function getConditions(lifePath, element, mode) {
+      const overviewBase =
+        "Today’s conditions are less about fate and more about how your nervous system will respond to pressure, interruption, and opportunity.";
+      const points = [];
+
+      if (element === "Fire") {
+        points.push(
+          "You may feel a push to act quickly. Pause once before you commit."
+        );
+      } else if (element === "Earth") {
+        points.push(
+          "You may cling to familiar routines. Make one small adjustment on purpose."
+        );
+      } else if (element === "Air") {
+        points.push(
+          "Your mind may run ahead of your body. Slow the pace of your decisions."
+        );
+      } else if (element === "Water") {
+        points.push(
+          "Emotions may feel louder than usual. Let them move without making heavy conclusions."
+        );
+      }
+
+      if ([1, 8, 9].includes(lifePath)) {
+        points.push(
+          "Leadership moments may appear in small ways. You do not have to overperform to be effective."
+        );
+      } else if ([2, 3, 6].includes(lifePath)) {
+        points.push(
+          "Relational energy is highlighted. Notice where you over-give or under-speak."
+        );
+      } else if ([7, 5].includes(lifePath)) {
+        points.push(
+          "You may analyze more than act. Choose one action from your thoughts instead of looping them."
+        );
+      }
+
+      if (mode === "morning") {
+        points.push(
+          "How you start your day will echo. Even one grounded choice early can shift the tone."
+        );
+      } else if (mode === "afternoon") {
+        points.push(
+          "You may be tempted to override your body’s signals to stay productive. Listen instead of pushing through everything."
+        );
+      } else {
+        points.push(
+          "Night thoughts may dramatize situations. Capture them, but make decisions in the next clear window."
+        );
+      }
+
+      return {
+        overview: overviewBase,
+        cond1: points[0] || "",
+        cond2: points[1] || "",
+        cond3: points[2] || "",
+      };
+    }
+
+    const SHADOWS = [
+      {
+        name: "The Doubter",
+        explanation:
+          "This pattern whispers that you are not ready or qualified, so you delay movement until the moment passes.",
+        counters: [
+          "Choose one small action that proves the doubt wrong instead of arguing with it.",
+          "Treat doubt as a weather report, not a command. Notice it, then move anyway.",
+        ],
+      },
+      {
+        name: "The Echo",
+        explanation:
+          "This pattern replays old conversations, betrayals, or mistakes until your present moment feels contaminated by the past.",
+        counters: [
+          "Label mental replays as past data. Ask, 'Is this happening now, or just echoing?'",
+          "Introduce one response your old self never tried. That is how you exit the loop.",
+        ],
+      },
+      {
+        name: "The False Mirror",
+        explanation:
+          "This pattern makes you treat other people’s projections as truth about you, even when they are just showing you their fear.",
+        counters: [
+          "When you feel judged, ask, 'Whose standard is this?' and return what is not yours.",
+          "Spend more time with people who respond to your truth, not just your image.",
+        ],
+      },
+      {
+        name: "The Fear-Mind",
+        explanation:
+          "This pattern builds worst-case futures and then treats them as inevitable, so you abandon aligned paths too early.",
+        counters: [
+          "Write down the worst-case story, then write a second story where you move with courage.",
+          "Take one low-risk step toward the aligned path and let reality, not fear, give feedback.",
+        ],
+      },
+      {
+        name: "The Distraction Demon",
+        explanation:
+          "This pattern keeps you scrolling, over-talking, or busy with everyone else’s life so you never sit with your own.",
+        counters: [
+          "Set a 20–25 minute focus block for one meaningful task and protect it like an appointment.",
+          "Delay distraction by five minutes when the urge hits. Often the wave will pass.",
+        ],
+      },
+      {
+        name: "The Abandonment Child",
+        explanation:
+          "This pattern panics when people pull back, and it pushes you into chasing or over-explaining to feel safe.",
+        counters: [
+          "Before you send a reactive message, give yourself 30 minutes and one grounding activity.",
+          "Remind yourself that distance does not automatically equal rejection.",
+        ],
+      },
+      {
+        name: "The Ego Beast",
+        explanation:
+          "This pattern makes every interaction about being right, validated, or seen as superior instead of being aligned.",
+        counters: [
+          "When you feel the need to prove a point, pause and ask, 'What do I actually want from this moment?'",
+          "Practice letting one small thing go without defending yourself and notice that you remain intact.",
+        ],
+      },
+    ];
+
+    const TESTS = [
+      {
+        name: "The Mirror Response",
+        explanation:
+          "When you stand in your truth, other people’s insecurities can surface as criticism, distance, or subtle competition.",
+      },
+      {
+        name: "The Threshold Test",
+        explanation:
+          "As you raise your standards, people may test your boundaries to see if the change is real or temporary.",
+      },
+      {
+        name: "The Manipulation Loop",
+        explanation:
+          "Your stability can attract people who use guilt, flattery, or pressure to secure access to your energy.",
+      },
+      {
+        name: "The Saboteur Response",
+        explanation:
+          "Some people around you may unconsciously pull you back toward old versions of yourself to feel safer.",
+      },
+      {
+        name: "The Temptation Trigger",
+        explanation:
+          "Old habits, people, or patterns may resurface not as a sign, but as a chance to choose differently.",
+      },
+      {
+        name: "The Identity Collision",
+        explanation:
+          "Your old identity and your emerging self may clash, creating tension in how others respond to your growth.",
+      },
+      {
+        name: "The Energy Drainer Test",
+        explanation:
+          "You may be asked to carry emotional weight that is not yours simply because you feel more stable.",
+      },
+      {
+        name: "The Doubt Seed",
+        explanation:
+          "Comments from others may plant small doubts about your path, especially when you are close to a shift.",
+      },
+    ];
+
+    const EMOTIONS = [
+      "Calmness",
+      "Anxiety",
+      "Grounded Focus",
+      "Restless Energy",
+      "Curiosity",
+      "Quiet Sadness",
+      "Nostalgia",
+      "Determination",
+      "Overwhelm",
+      "Relief",
+      "Protectiveness",
+      "Vulnerability",
+      "Irritation",
+      "Gratitude",
+      "Resentment",
+      "Hopefulness",
+      "Disappointment",
+      "Cautious Optimism",
+      "Emotional Tiredness",
+      "Excitement",
+      "Confusion",
+      "Clarity",
+      "Loneliness",
+      "Sense of Purpose",
+      "Emotional Numbness",
+      "Empathic Pain",
+      "Awe",
+    ];
+
+    function getSupport(element) {
+      const crystalByElement = {
+        Fire: {
+          crystal: "Carnelian or Citrine",
+          note: "Supports courage, visible action, and forward motion without burnout.",
+        },
+        Earth: {
+          crystal: "Black Tourmaline or Smoky Quartz",
+          note: "Supports grounding, stability, and protection when you feel overloaded.",
+        },
+        Air: {
+          crystal: "Amethyst or Lapis Lazuli",
+          note: "Supports mental clarity, calm thinking, and focused communication.",
+        },
+        Water: {
+          crystal: "Rose Quartz or Moonstone",
+          note: "Supports emotional processing, self-compassion, and gentle release.",
+        },
+      };
+
+      const scentByElement = {
+        Fire: {
+          scent: "Citrus (orange, bergamot) or cinnamon",
+          note: "Keeps energy bright but controlled so you move with intention, not impulse.",
+        },
+        Earth: {
+          scent: "Sandalwood, vetiver, or cedarwood",
+          note: "Deepens grounding and helps you feel steady when things around you move quickly.",
+        },
+        Air: {
+          scent: "Peppermint, eucalyptus, or rosemary",
+          note: "Clears mental fog and supports clear decisions without overthinking everything.",
+        },
+        Water: {
+          scent: "Lavender, jasmine, or frankincense",
+          note: "Soothes emotional spikes and makes it easier to rest your nervous system.",
+        },
+      };
+
+      const actionMap = {
+        Fire: {
+          action: "Take a 10–15 minute walk without your phone.",
+          note: "Let your body move so your mind can slow down and reset.",
+        },
+        Earth: {
+          action: "Organize one small physical space around you.",
+          note: "Bringing order to your environment supports clarity in your decisions.",
+        },
+        Air: {
+          action: "Write down the three thoughts circling the most today.",
+          note: "Once they are on paper, you can choose which ones deserve action.",
+        },
+        Water: {
+          action: "Name your main feeling in one sentence and breathe with it.",
+          note: "Feelings ease when they are acknowledged instead of argued with.",
+        },
+      };
+
+      return {
+        crystal: crystalByElement[element] || crystalByElement.Earth,
+        scent: scentByElement[element] || scentByElement.Water,
+        action: actionMap[element] || actionMap.Air,
+      };
+    }
+
+    function getExposurePattern(center, element) {
+      // How they tend to be tested / used, in grounded language
+      if (center.startsWith("Heart")) {
+        return "Because you feel deeply, people who are less regulated may lean on your empathy without giving the same care back. Your test is to support without self-erasing.";
+      }
+      if (center.startsWith("Body")) {
+        return "Because you move first and carry weight well, others may quietly expect you to always 'handle it.' Your test is to notice when responsibility stops being shared.";
+      }
+      if (center.startsWith("Head")) {
+        return "Because you can see angles and patterns, people may come to you for answers but ignore your limits. Your test is to stop over-explaining when you feel drained.";
+      }
+      if (center.startsWith("Integrated")) {
+        return "Because you can read the room on multiple levels, some people may treat you like emotional infrastructure. Your test is to remember you are a person, not a system.";
+      }
+      // fallback by element
+      if (element === "Fire") {
+        return "Your drive and intensity can attract people who want progress without doing their share. Your test is to protect your energy from being used as free fuel.";
+      }
+      if (element === "Earth") {
+        return "Your reliability can make people assume you will always be there, even when they are careless. Your test is to notice when stability turns into quiet resentment.";
+      }
+      if (element === "Air") {
+        return "Your communication and ideas can be borrowed without proper credit. Your test is to protect your concepts and value your clarity as an asset.";
+      }
+      if (element === "Water") {
+        return "Your emotional range can make you the unofficial therapist for everyone around you. Your test is to stop absorbing what others refuse to manage.";
+      }
+      return "Your sensitivity and strength can both be targeted. Your test is to notice where access to you is taken for granted instead of appreciated.";
+    }
+
+    document.getElementById("reportForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const birthInput = document.getElementById("birthdate").value;
+      const mode = document.getElementById("mode").value;
+      const msg = document.getElementById("placeholderMsg");
+
+      if (!birthInput) {
+        alert("Please enter a valid birthdate.");
+        return;
+      }
+
+      const birthDateObj = new Date(birthInput + "T12:00:00");
+      if (isNaN(birthDateObj.getTime())) {
+        alert("Please enter a valid birthdate.");
+        return;
+      }
+
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      const hashSeed = hashString(birthInput + "|" + mode + "|" + todayStr);
+
+      const lifePath = getLifePath(birthInput);
+      const month = birthDateObj.getMonth() + 1;
+      const day = birthDateObj.getDate();
+      const sign = getZodiac(month, day);
+      const element = getElement(sign);
+      const center = getCenterType(lifePath);
+      const destinyArchetype = getDestinyArchetype(lifePath);
+      const elementDesc = getElementDescription(element);
+      const coreDrive = getCoreDrive(lifePath);
+      const moonPhase = getMoonPhaseName(today);
+      const windowLabel = getTimeWindow(mode);
+
+      const dateDisplay = today.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      const conditions = getConditions(lifePath, element, mode);
+
+      const shadow = pickDeterministic(SHADOWS, hashSeed, 3);
+      const test = pickDeterministic(TESTS, hashSeed, 7);
+      const emotion = pickDeterministic(EMOTIONS, hashSeed, 11);
+
+      const support = getSupport(element);
+      const exposureLine = getExposurePattern(center, element);
+
+      // Fill header
+      document.getElementById("reportTitle").textContent =
+        mode.charAt(0).toUpperCase() + mode.slice(1) + " Briefing";
+      document.getElementById("reportDate").textContent = dateDisplay;
+      document.getElementById("reportWindow").textContent = windowLabel;
+      document.getElementById("moonPhase").textContent = moonPhase;
+      document.getElementById("destinyNumberMeta").textContent = lifePath;
+      document.getElementById("elementLabel").textContent = element + " element";
+      document.getElementById("zodiacSign").textContent = sign;
+
+      // Core field
+      document.getElementById("destinyArchetype").textContent = destinyArchetype;
+      document.getElementById("elementDescription").textContent = elementDesc;
+      document.getElementById("centerType").textContent = center;
+      document.getElementById("coreDrive").textContent = coreDrive;
+
+      document.getElementById("coreBlueprintSummary").textContent =
+        "Your core field reads as a Chosen One whose life path number " +
+        lifePath +
+        " combines with a " +
+        element.toLowerCase() +
+        " temperament in the sign of " +
+        sign +
+        ". This shapes how you handle pressure, opportunity, and emotional intensity.";
+
+      document.getElementById("coreStrengthsWeaknesses").textContent =
+        "Your strengths live where your natural instincts and your values overlap. Your growth edge lives where you feel pulled to abandon yourself to keep the peace, stay comfortable, or avoid being seen.";
+
+      // Conditions
+      document.getElementById("conditionsOverview").textContent =
+        conditions.overview;
+      document.getElementById("cond1").textContent = conditions.cond1;
+      document.getElementById("cond2").textContent = conditions.cond2;
+      document.getElementById("cond3").textContent = conditions.cond3;
+
+      // Shadow & Test
+      document.getElementById("shadowName").textContent = shadow.name;
+      document.getElementById("emotionName").textContent = emotion;
+      document.getElementById("shadowExplanation").textContent =
+        shadow.explanation;
+      document.getElementById("testName").textContent = test.name;
+      document.getElementById("testExplanation").textContent =
+        test.explanation;
+      document.getElementById("exposurePattern").textContent = exposureLine;
+      document.getElementById("counter1").textContent = shadow.counters[0];
+      document.getElementById("counter2").textContent = shadow.counters[1];
+
+      // Support kit
+      document.getElementById("supportIntro").textContent =
+        "Support tools are not magic. They help your nervous system match the decisions you are trying to make. Use them as anchors, not as shortcuts.";
+
+      document.getElementById("crystalPrimary").textContent =
+        support.crystal.crystal;
+      document.getElementById("crystalNote").textContent =
+        support.crystal.note;
+
+      document.getElementById("scentPrimary").textContent =
+        support.scent.scent;
+      document.getElementById("scentNote").textContent = support.scent.note;
+
+      document.getElementById("actionPrimary").textContent =
+        support.action.action;
+      document.getElementById("actionNote").textContent =
+        support.action.note;
+
+      // Show report
+      document.getElementById("reportCard").style.display = "block";
+      msg.textContent =
+        "Report generated. You can scroll, screenshot, or read it aloud.";
+    });
+  </script>
 </body>
 </html>
