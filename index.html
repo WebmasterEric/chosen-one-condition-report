@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chosen One Condition Report</title>
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top, #3b82f6 0, #1e1b4b 30%, #020617 70%);
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --card-border: rgba(148, 163, 184, 0.35);
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.2);
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --text-strong: #f9fafb;
+      --shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.95);
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .report-shell {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .report-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-strong);
+      border: 1px solid var(--card-border);
+      padding: 20px 18px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .report-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(
+        circle at top right,
+        rgba(56, 189, 248, 0.18),
+        transparent 60%
+      );
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .report-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER */
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .report-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.15);
+      border: 1px solid rgba(45, 212, 191, 0.4);
+      font-size: 0.7rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: #a5f3fc;
+    }
+
+    .report-pill span.icon {
+      font-size: 0.95rem;
+    }
+
+    .report-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-strong);
+      margin-top: 10px;
+    }
+
+    .report-subtitle {
+      margin-top: 6px;
+      font-size: 0.82rem;
+      color: var(--text-soft);
+    }
+
+    .report-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 12px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    .report-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    /* SECTION FRAME */
+
+    .section {
+      position: relative;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .section:first-of-type {
+      margin-top: 10px;
+    }
+
+    .section-label {
+      position: absolute;
+      top: -11px;
+      left: 12px;
+      padding: 0 8px;
+      background: var(--card-bg);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-label-icon {
+      font-size: 0.85rem;
+    }
+
+    .section-body {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text-main);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .pill {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .section-body p + p {
+      margin-top: 6px;
+    }
+
+    .section-body ul {
+      list-style: none;
+      margin-top: 6px;
+      padding-left: 0;
+    }
+
+    .section-body ul li {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .bullet {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    /* SUPPORT GRID */
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .support-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(
+        circle at top left,
+        rgba(56, 189, 248, 0.13),
+        rgba(15, 23, 42, 0.95)
+      );
+      padding: 8px 10px;
+      font-size: 0.84rem;
+    }
+
+    .support-title {
+      font-size: 0.76rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+
+    .support-main {
+      color: var(--text-strong);
+      font-weight: 500;
+    }
+
+    .support-note {
+      color: var(--text-soft);
+      margin-top: 1px;
+    }
+
+    /* FOOTER */
+
+    .report-footer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.45);
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-note-strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .footer-tagline {
+      opacity: 0.9;
+    }
+
+    @media (min-width: 640px) {
+      .report-card {
+        padding: 24px 22px 24px;
+      }
+      .support-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .report-title {
+        font-size: 1.45rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="report-shell">
+    <article class="report-card">
+      <div class="report-inner">
+        <!-- HEADER -->
+        <header class="report-header">
+          <div class="report-pill">
+            <span class="icon">⟡</span>
+            <span>Chosen One Condition Report</span>
+          </div>
+          <h1 class="report-title">
+            {{REPORT_TITLE}}
+          </h1>
+          <p class="report-subtitle">
+            Tuned to your birthdate and current conditions. Not a prediction —
+            a briefing.
+          </p>
+          <div class="report-meta">
+            <span>📅 {{REPORT_DATE}}</span>
+            <span>⏱ {{REPORT_WINDOW}}</span>
+            <span>☾ {{MOON_PHASE}}</span>
+            <span>№ {{DESTINY_NUMBER}} • {{ELEMENT_LABEL}}</span>
+          </div>
+        </header>
+
+        <!-- SECTION 1: CORE FIELD -->
+        <section class="section">
+          <div class="section-label">
+            <span class="section-label-icon">◎</span>
+            <span>Core Field</span>
+          </div>
+          <div class="section-body">
+            <div class="pill-row">
+              <span class="pill"><strong>Destiny:</strong> {{DESTINY_ARCHETYPE}}</span>
+              <span class="pill"><strong>Element:</strong> {{ELEMENT_DESCRIPTION}}</span>
+              <span class="pill"><strong>Center:</strong> {{CENTER_TYPE}}</span>
+            </div>
+            <p>{{CORE_BLUEPRINT_SUMMARY}}</p>
+            <p>{{CORE_STRENGTHS_WEAKNESSES}}</p>
+          </div>
+        </section>
+
+        <!-- SECTION 2: CONDITIONS -->
+        <section class="section">
+          <div class="section-label">
+            <span class="section-label-icon">☰</span>
+            <span>Conditions Around You</span>
+          </div>
+          <div class="section-body">
+            <p>{{CONDITIONS_OVERVIEW}}</p>
+            <ul>
+              <li>
+                <span class="bullet">•</span>
+                <span>{{CONDITION_POINT_1}}</span>
+              </li>
+              <li>
+                <span class="bullet">•</span>
+                <span>{{CONDITION_POINT_2}}</span>
+              </li>
+              <li>
+                <span class="bullet">•</span>
+                <span>{{CONDITION_POINT_3}}</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 3: SHADOW & TEST -->
+        <section class="section">
+          <div class="section-label">
+            <span class="section-label-icon">⚠</span>
+            <span>Shadow & Test</span>
+          </div>
+          <div class="section-body">
+            <div class="pill-row">
+              <span class="pill"><strong>Shadow:</strong> {{SHADOW_NAME}}</span>
+              <span class="pill"><strong>Test:</strong> {{TEST_NAME}}</span>
+              <span class="pill"><strong>Emotion:</strong> {{EMOTION_NAME}}</span>
+            </div>
+            <p>{{SHADOW_EXPLANATION}}</p>
+            <p>{{TEST_EXPLANATION}}</p>
+            <ul>
+              <li>
+                <span class="bullet">→</span>
+                <span>{{COUNTERMEASURE_1}}</span>
+              </li>
+              <li>
+                <span class="bullet">→</span>
+                <span>{{COUNTERMEASURE_2}}</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SECTION 4: SUPPORT KIT -->
+        <section class="section">
+          <div class="section-label">
+            <span class="section-label-icon">✦</span>
+            <span>Support Kit</span>
+          </div>
+          <div class="section-body">
+            <p>{{SUPPORT_INTRO}}</p>
+            <div class="support-grid">
+              <div class="support-card">
+                <div class="support-title">Crystal</div>
+                <div class="support-main">{{CRYSTAL_PRIMARY}}</div>
+                <div class="support-note">{{CRYSTAL_NOTE}}</div>
+              </div>
+              <div class="support-card">
+                <div class="support-title">Scent / Candle</div>
+                <div class="support-main">{{SCENT_PRIMARY}}</div>
+                <div class="support-note">{{SCENT_NOTE}}</div>
+              </div>
+              <div class="support-card">
+                <div class="support-title">Micro-Action</div>
+                <div class="support-main">{{ACTION_PRIMARY}}</div>
+                <div class="support-note">{{ACTION_NOTE}}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="report-footer">
+          <div class="footer-tagline">
+            <span class="footer-note-strong">Reminder:</span>
+            This is a conditions report, not a prophecy. Use it to move with
+            more awareness, not more fear.
+          </div>
+          <div>
+            Built on natural law, emotional patterning, and numerology — for
+            Chosen Ones learning to navigate their own power.
+          </div>
+        </footer>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
