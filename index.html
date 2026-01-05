@@ -3,15 +3,14 @@
 <head>
   <meta name="google-site-verification" content="Vbsgzad0o8PMx_M1E8RsFqAFN87c3A_nXuQNuTPh-mA" />
   <meta charset="UTF-8" />
-  <meta name="viewport"content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chosen One Condition Report</title>
   <style>
-    :root {
+    :root{
       --bg-gradient: radial-gradient(circle at top, #3b82f6 0, #1e1b4b 30%, #020617 70%);
       --card-bg: rgba(15, 23, 42, 0.92);
       --card-border: rgba(148, 163, 184, 0.35);
       --accent: #38bdf8;
-      --accent-soft: rgba(56, 189, 248, 0.2);
       --text-main: #e5e7eb;
       --text-soft: #9ca3af;
       --text-strong: #f9fafb;
@@ -19,1135 +18,1416 @@
       --radius-lg: 20px;
       --radius-xl: 28px;
     }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+      background:var(--bg-gradient);
+      color:var(--text-main);
+      display:flex;align-items:center;justify-content:center;
+      padding:16px;
+    }
+    .app-shell{width:100%;max-width:780px;margin:0 auto}
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    .input-card{
+      background:rgba(15,23,42,0.86);
+      border-radius:var(--radius-xl);
+      border:1px solid rgba(148,163,184,0.4);
+      padding:14px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.9);
+      margin-bottom:12px;
+      position:relative;overflow:hidden;
+    }
+    .input-card::before{
+      content:"";position:absolute;inset:-40%;
+      background:radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 60%);
+      opacity:0.9;pointer-events:none;
+    }
+    .input-inner{position:relative;z-index:1}
+    .input-title{
+      font-size:.95rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--text-strong);margin-bottom:4px;
+    }
+    .input-sub{font-size:.8rem;color:var(--text-soft);margin-bottom:10px}
+    .input-row{display:flex;flex-direction:column;gap:8px}
+    @media (min-width:640px){.input-row{flex-direction:row}}
+    .field{flex:1;display:flex;flex-direction:column;gap:4px}
+    .field label{
+      font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)
+    }
+    .field input,.field select{
+      background:rgba(15,23,42,0.92);
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.6);
+      padding:7px 11px;
+      font-size:.85rem;color:var(--text-main);outline:none;
+    }
+    .field input:focus,.field select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(56,189,248,0.4);
+    }
+    .btn-row{margin-top:10px;display:flex;justify-content:flex-end}
+    .btn-generate{
+      border-radius:999px;
+      border:1px solid rgba(56,189,248,0.7);
+      background:linear-gradient(135deg, rgba(56,189,248,0.16), rgba(56,189,248,0.35));
+      padding:7px 18px;
+      font-size:.86rem;color:#ecfeff;
+      display:inline-flex;align-items:center;gap:6px;
+      cursor:pointer;
     }
 
-    body {
-      min-height: 100vh;
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
+    .report-card{
+      background:var(--card-bg);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow-strong);
+      border:1px solid var(--card-border);
+      padding:20px 18px 22px;
+      position:relative;overflow:hidden;
+      display:none;
+    }
+    .report-card::before{
+      content:"";position:absolute;inset:-40%;
+      background:radial-gradient(circle at top right, rgba(56,189,248,0.18), transparent 60%);
+      opacity:.85;pointer-events:none;
+    }
+    .report-inner{position:relative;z-index:1}
+
+    .report-header{text-align:center;margin-bottom:18px}
+    .report-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:4px 10px;border-radius:999px;
+      background:rgba(15,118,110,0.15);
+      border:1px solid rgba(45,212,191,0.4);
+      font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:#a5f3fc;
+    }
+    .report-title{
+      font-size:1.3rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+      color:var(--text-strong);margin-top:10px;
+    }
+    .report-subtitle{margin-top:6px;font-size:.82rem;color:var(--text-soft)}
+    .report-meta{
+      display:flex;flex-wrap:wrap;justify-content:center;
+      gap:8px 12px;margin-top:10px;font-size:.78rem;color:var(--text-soft);
+    }
+    .report-meta span{
+      display:inline-flex;align-items:center;gap:4px;
+      padding:2px 8px;border-radius:999px;
+      background:rgba(15,23,42,0.9);
+      border:1px solid rgba(148,163,184,0.35);
     }
 
-    .app-shell {
-      width: 100%;
-      max-width: 780px;
-      margin: 0 auto;
+    .section{position:relative;margin-top:16px;padding-top:14px;border-top:1px solid rgba(148,163,184,0.4)}
+    .section:first-of-type{margin-top:10px}
+    .section-label{
+      position:absolute;top:-11px;left:12px;padding:0 8px;
+      background:var(--card-bg);
+      font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
+      display:inline-flex;align-items:center;gap:6px;
     }
-
-    /* INPUT PANEL */
-
-    .input-card {
-      background: rgba(15, 23, 42, 0.86);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 14px 14px 14px;
-      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
-      margin-bottom: 12px;
-      position: relative;
-      overflow: hidden;
+    .section-body{font-size:.9rem;line-height:1.55;color:var(--text-main)}
+    .pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+    .pill{
+      padding:3px 8px;border-radius:999px;
+      background:rgba(15,23,42,0.9);
+      border:1px solid rgba(148,163,184,0.4);
+      font-size:.72rem;color:var(--text-soft);
+      display:inline-flex;align-items:center;gap:4px;
     }
+    .pill strong{color:var(--accent);font-weight:500}
+    .section-body p + p{margin-top:6px}
+    .section-body ul{list-style:none;margin-top:6px;padding-left:0}
+    .section-body ul li{display:flex;gap:8px;margin-top:4px}
+    .bullet{margin-top:4px;font-size:.7rem;color:var(--accent)}
 
-    .input-card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(
-        circle at top left,
-        rgba(56, 189, 248, 0.18),
-        transparent 60%
-      );
-      opacity: 0.9;
-      pointer-events: none;
+    .support-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px}
+    .support-card{
+      border-radius:var(--radius-lg);
+      border:1px solid rgba(148,163,184,0.5);
+      background:radial-gradient(circle at top left, rgba(56,189,248,0.13), rgba(15,23,42,0.95));
+      padding:8px 10px;font-size:.84rem;
     }
+    .support-title{font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+    .support-main{color:var(--text-strong);font-weight:500}
+    .support-note{color:var(--text-soft);margin-top:1px}
 
-    .input-inner {
-      position: relative;
-      z-index: 1;
+    .report-footer{
+      margin-top:14px;padding-top:10px;border-top:1px dashed rgba(148,163,184,0.45);
+      font-size:.75rem;color:var(--text-soft);
+      display:flex;flex-direction:column;gap:6px;
     }
-
-    .input-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-strong);
-      margin-bottom: 4px;
+    .footer-note-strong{color:var(--accent);font-weight:500}
+    .footer-cta{
+      margin-top:2px;padding:8px 10px;border-radius:14px;
+      border:1px solid rgba(56,189,248,0.35);
+      background:rgba(56,189,248,0.08);
+      color:#e0f2fe;text-align:center;font-weight:600;letter-spacing:.03em;
     }
-
-    .input-sub {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-bottom: 10px;
+    @media (min-width:640px){
+      .report-card{padding:24px 22px 24px}
+      .support-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .report-title{font-size:1.45rem}
     }
-
-    .input-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    @media (min-width: 640px) {
-      .input-row {
-        flex-direction: row;
-      }
-    }
-
-    .field {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .field label {
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .field input,
-    .field select {
-      background: rgba(15, 23, 42, 0.92);
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      padding: 7px 11px;
-      font-size: 0.85rem;
-      color: var(--text-main);
-      outline: none;
-    }
-
-    .field input:focus,
-    .field select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
-    }
-
-    .btn-row {
-      margin-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .btn-generate {
-      border-radius: 999px;
-      border: 1px solid rgba(56, 189, 248, 0.7);
-      background: linear-gradient(
-        135deg,
-        rgba(56, 189, 248, 0.16),
-        rgba(56, 189, 248, 0.35)
-      );
-      padding: 7px 18px;
-      font-size: 0.86rem;
-      color: #ecfeff;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-generate span.icon {
-      font-size: 0.95rem;
-    }
-
-    /* REPORT CARD */
-
-    .report-card {
-      background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-strong);
-      border: 1px solid var(--card-border);
-      padding: 20px 18px 22px;
-      position: relative;
-      overflow: hidden;
-      display: none; /* shown after generation */
-    }
-
-    .report-card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(
-        circle at top right,
-        rgba(56, 189, 248, 0.18),
-        transparent 60%
-      );
-      opacity: 0.85;
-      pointer-events: none;
-    }
-
-    .report-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* HEADER */
-
-    .report-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
-
-    .report-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(15, 118, 110, 0.15);
-      border: 1px solid rgba(45, 212, 191, 0.4);
-      font-size: 0.7rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: #a5f3fc;
-    }
-
-    .report-pill span.icon {
-      font-size: 0.95rem;
-    }
-
-    .report-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-strong);
-      margin-top: 10px;
-    }
-
-    .report-subtitle {
-      margin-top: 6px;
-      font-size: 0.82rem;
-      color: var(--text-soft);
-    }
-
-    .report-meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px 12px;
-      margin-top: 10px;
-      font-size: 0.78rem;
-      color: var(--text-soft);
-    }
-
-    .report-meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
-
-    /* SECTION FRAME */
-
-    .section {
-      position: relative;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(148, 163, 184, 0.4);
-    }
-
-    .section:first-of-type {
-      margin-top: 10px;
-    }
-
-    .section-label {
-      position: absolute;
-      top: -11px;
-      left: 12px;
-      padding: 0 8px;
-      background: var(--card-bg);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .section-label-icon {
-      font-size: 0.85rem;
-    }
-
-    .section-body {
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--text-main);
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .pill {
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 0.72rem;
-      color: var(--text-soft);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .pill strong {
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .section-body p + p {
-      margin-top: 6px;
-    }
-
-    .section-body ul {
-      list-style: none;
-      margin-top: 6px;
-      padding-left: 0;
-    }
-
-    .section-body ul li {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .bullet {
-      margin-top: 4px;
-      font-size: 0.7rem;
-      color: var(--accent);
-    }
-
-    /* SUPPORT GRID */
-
-    .support-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .support-card {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(
-        circle at top left,
-        rgba(56, 189, 248, 0.13),
-        rgba(15, 23, 42, 0.95)
-      );
-      padding: 8px 10px;
-      font-size: 0.84rem;
-    }
-
-    .support-title {
-      font-size: 0.76rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 3px;
-    }
-
-    .support-main {
-      color: var(--text-strong);
-      font-weight: 500;
-    }
-
-    .support-note {
-      color: var(--text-soft);
-      margin-top: 1px;
-    }
-
-    /* FOOTER */
-
-    .report-footer {
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(148, 163, 184, 0.45);
-      font-size: 0.75rem;
-      color: var(--text-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .footer-note-strong {
-      color: var(--accent);
-      font-weight: 500;
-    }
-
-    .footer-tagline {
-      opacity: 0.9;
-    }
-
-    @media (min-width: 640px) {
-      .report-card {
-        padding: 24px 22px 24px;
-      }
-      .support-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      .report-title {
-        font-size: 1.45rem;
-      }
-    }
-
-    .placeholder-message {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-top: 6px;
-    }
+    .placeholder-message{font-size:.8rem;color:var(--text-soft);margin-top:6px}
   </style>
 </head>
 <body>
-  <main class="app-shell">
-    <!-- INPUT CARD -->
-    <section class="input-card">
-      <div class="input-inner">
-        <div class="input-title">Chosen One Condition Report</div>
-        <div class="input-sub">
-          Enter your birthdate and current time window. This generates a
-          conditions briefing based on natural law, numerology, and emotional
-          patterning. It does not predict the future.
+<main class="app-shell">
+  <section class="input-card">
+    <div class="input-inner">
+      <div class="input-title">Chosen One Condition Report</div>
+      <div class="input-sub">
+        Enter your birthdate and time window. This generates a conditions briefing based on patterning + numerology.
+        It does not predict the future.
+      </div>
+      <form id="reportForm">
+        <div class="input-row">
+          <div class="field">
+            <label for="birthdate">Birthdate</label>
+            <input id="birthdate" type="date" required />
+          </div>
+          <div class="field">
+            <label for="mode">Time Window</label>
+            <select id="mode" required>
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="night">Night</option>
+            </select>
+          </div>
         </div>
-        <form id="reportForm">
-          <div class="input-row">
-            <div class="field">
-              <label for="birthdate">Birthdate</label>
-              <input id="birthdate" type="date" required />
+        <div class="btn-row">
+          <button type="submit" class="btn-generate"><span class="icon">✦</span><span>Generate Report</span></button>
+        </div>
+        <div class="placeholder-message" id="placeholderMsg">
+          Your report will appear below. Screenshot it, read it aloud, or save it for later.
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <article class="report-card" id="reportCard">
+    <div class="report-inner">
+      <header class="report-header">
+        <div class="report-pill"><span class="icon">⟡</span><span>Chosen One Condition Report</span></div>
+        <h1 class="report-title" id="reportTitle"></h1>
+        <p class="report-subtitle">Tuned to your birthdate and current conditions. Not a prediction — a briefing.</p>
+        <div class="report-meta">
+          <span>📅 <span id="reportDate"></span></span>
+          <span>⏱ <span id="reportWindow"></span></span>
+          <span>☾ <span id="moonPhase"></span></span>
+          <span>☉ <span id="zodiacSign"></span></span>
+          <span>№ <span id="lifePathMeta"></span> • <span id="elementLabel"></span></span>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="section-label"><span>◎</span><span>Core Field</span></div>
+        <div class="section-body">
+          <div class="pill-row">
+            <span class="pill"><strong>Destiny:</strong> <span id="destinyOut"></span></span>
+            <span class="pill"><strong>Element:</strong> <span id="elementOut"></span></span>
+            <span class="pill"><strong>Center:</strong> <span id="centerOut"></span></span>
+            <span class="pill"><strong>Core Drive:</strong> <span id="driveOut"></span></span>
+          </div>
+          <p id="blueprintOut"></p>
+          <p id="calibrationOut"></p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label"><span>☰</span><span>Conditions Around You</span></div>
+        <div class="section-body">
+          <p id="conditionsOverviewOut"></p>
+          <ul>
+            <li><span class="bullet">•</span><span id="cond1Out"></span></li>
+            <li><span class="bullet">•</span><span id="cond2Out"></span></li>
+            <li><span class="bullet">•</span><span id="cond3Out"></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label"><span>⚠</span><span>Shadow & Test</span></div>
+        <div class="section-body">
+          <div class="pill-row">
+            <span class="pill"><strong>Shadow:</strong> <span id="shadowNameOut"></span></span>
+            <span class="pill"><strong>Test:</strong> <span id="testNameOut"></span></span>
+            <span class="pill"><strong>Emotion:</strong> <span id="emotionOut"></span></span>
+          </div>
+          <p id="shadowExplainOut"></p>
+          <p id="testExplainOut"></p>
+          <p id="exposureOut"></p>
+          <ul>
+            <li><span class="bullet">→</span><span id="counter1Out"></span></li>
+            <li><span class="bullet">→</span><span id="counter2Out"></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-label"><span>✦</span><span>Support Kit</span></div>
+        <div class="section-body">
+          <p id="supportIntroOut"></p>
+          <div class="support-grid">
+            <div class="support-card">
+              <div class="support-title">Crystals (3)</div>
+              <div class="support-main" id="crystalsOut"></div>
+              <div class="support-note" id="crystalsNoteOut"></div>
             </div>
-            <div class="field">
-              <label for="mode">Time Window</label>
-              <select id="mode" required>
-                <option value="morning">Morning</option>
-                <option value="afternoon">Afternoon</option>
-                <option value="night">Night</option>
-              </select>
+            <div class="support-card">
+              <div class="support-title">Scent / Candle / Incense</div>
+              <div class="support-main" id="scentOut"></div>
+              <div class="support-note" id="scentNoteOut"></div>
             </div>
-          </div>
-          <div class="btn-row">
-            <button type="submit" class="btn-generate">
-              <span class="icon">✦</span>
-              <span>Generate Report</span>
-            </button>
-          </div>
-          <div class="placeholder-message" id="placeholderMsg">
-            Your report will appear below. You can screenshot it, read it aloud,
-            or save it for later.
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- REPORT CARD -->
-    <article class="report-card" id="reportCard">
-      <div class="report-inner">
-        <!-- HEADER -->
-        <header class="report-header">
-          <div class="report-pill">
-            <span class="icon">⟡</span>
-            <span>Chosen One Condition Report</span>
-          </div>
-          <h1 class="report-title" id="reportTitle"></h1>
-          <p class="report-subtitle">
-            Tuned to your birthdate and current conditions. Not a prediction —
-            a briefing.
-          </p>
-          <div class="report-meta">
-            <span>📅 <span id="reportDate"></span></span>
-            <span>⏱ <span id="reportWindow"></span></span>
-            <span>☾ <span id="moonPhase"></span></span>
-            <span>☉ <span id="zodiacSign"></span></span>
-            <span>№ <span id="destinyNumberMeta"></span> • <span id="elementLabel"></span></span>
-          </div>
-        </header>
-
-        <!-- SECTION 1: CORE FIELD -->
-        <section class="section">
-          <div class="section-label">
-            <span class="section-label-icon">◎</span>
-            <span>Core Field</span>
-          </div>
-          <div class="section-body">
-            <div class="pill-row">
-              <span class="pill"><strong>Destiny:</strong> <span id="destinyArchetype"></span></span>
-              <span class="pill"><strong>Element:</strong> <span id="elementDescription"></span></span>
-              <span class="pill"><strong>Center:</strong> <span id="centerType"></span></span>
-              <span class="pill"><strong>Core Drive:</strong> <span id="coreDrive"></span></span>
-            </div>
-            <p id="coreBlueprintSummary"></p>
-            <p id="coreStrengthsWeaknesses"></p>
-          </div>
-        </section>
-
-        <!-- SECTION 2: CONDITIONS -->
-        <section class="section">
-          <div class="section-label">
-            <span class="section-label-icon">☰</span>
-            <span>Conditions Around You</span>
-          </div>
-          <div class="section-body">
-            <p id="conditionsOverview"></p>
-            <ul>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond1"></span>
-              </li>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond2"></span>
-              </li>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond3"></span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- SECTION 3: SHADOW & TEST -->
-        <section class="section">
-          <div class="section-label">
-            <span class="section-label-icon">⚠</span>
-            <span>Shadow & Test</span>
-          </div>
-          <div class="section-body">
-            <div class="pill-row">
-              <span class="pill"><strong>Shadow:</strong> <span id="shadowName"></span></span>
-              <span class="pill"><strong>Test:</strong> <span id="testName"></span></span>
-              <span class="pill"><strong>Emotion:</strong> <span id="emotionName"></span></span>
-            </div>
-            <p id="shadowExplanation"></p>
-            <p id="testExplanation"></p>
-            <p id="exposurePattern"></p>
-            <ul>
-              <li>
-                <span class="bullet">→</span>
-                <span id="counter1"></span>
-              </li>
-              <li>
-                <span class="bullet">→</span>
-                <span id="counter2"></span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- SECTION 4: SUPPORT KIT -->
-        <section class="section">
-          <div class="section-label">
-            <span class="section-label-icon">✦</span>
-            <span>Support Kit</span>
-          </div>
-          <div class="section-body">
-            <p id="supportIntro"></p>
-            <div class="support-grid">
-              <div class="support-card">
-                <div class="support-title">Crystal</div>
-                <div class="support-main" id="crystalPrimary"></div>
-                <div class="support-note" id="crystalNote"></div>
-              </div>
-              <div class="support-card">
-                <div class="support-title">Scent / Candle</div>
-                <div class="support-main" id="scentPrimary"></div>
-                <div class="support-note" id="scentNote"></div>
-              </div>
-              <div class="support-card">
-                <div class="support-title">Micro-Action</div>
-                <div class="support-main" id="actionPrimary"></div>
-                <div class="support-note" id="actionNote"></div>
-              </div>
+            <div class="support-card">
+              <div class="support-title">Micro-Action</div>
+              <div class="support-main" id="actionOut"></div>
+              <div class="support-note" id="actionNoteOut"></div>
             </div>
           </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="report-footer">
-          <div class="footer-tagline">
-            <span class="footer-note-strong">Reminder:</span>
-            This is a conditions report, not a prophecy. Use it to move with
-            more awareness, not more fear.
+          <div style="margin-top:10px;font-size:0.82rem;color:var(--text-soft);">
+            <strong style="color:var(--accent);font-weight:600;">Cleansing Herb (Environment):</strong>
+            <span id="herbOut"></span>
           </div>
-          <div>
-            Built on natural law, behavioral patterns, and numerology — for
-            Chosen Ones learning to navigate their own power.
-          </div>
-        </footer>
-      </div>
-    </article>
-  </main>
+        </div>
+      </section>
 
-  <script>
-    function hashString(str) {
-      let h = 0;
-      for (let i = 0; i < str.length; i++) {
-        h = (h * 31 + str.charCodeAt(i)) | 0;
-      }
-      return Math.abs(h);
+      <footer class="report-footer">
+        <div><span class="footer-note-strong">Reminder:</span> This is a conditions report, not a prophecy. Use it for awareness — not fear.</div>
+        <div class="footer-cta">Join my livestream @webmaster_eric on TikTok</div>
+      </footer>
+    </div>
+  </article>
+</main>
+
+<script>
+  // -------------------------
+  // Utilities (deterministic)
+  // -------------------------
+  function hashString(str){ let h=0; for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))|0; return Math.abs(h); }
+  function reduceToDigit(n){
+    while(n>9 && n!==11 && n!==22 && n!==33){
+      n=n.toString().split("").reduce((s,d)=>s+parseInt(d,10),0);
     }
-
-    function reduceToDigit(n) {
-      while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
-        n = n
-          .toString()
-          .split("")
-          .reduce((sum, d) => sum + parseInt(d, 10), 0);
-      }
-      return n;
+    return n;
+  }
+  function getLifePath(dateStr){
+    const digits=dateStr.replace(/[^0-9]/g,"").split("");
+    const sum=digits.reduce((s,d)=>s+parseInt(d,10),0);
+    return reduceToDigit(sum);
+  }
+  function dayIndexUTC(dateObj){
+    const utc=Date.UTC(dateObj.getUTCFullYear(), dateObj.getUTCMonth(), dateObj.getUTCDate());
+    return Math.floor(utc/(1000*60*60*24));
+  }
+  function pick(list, seed, offset){ return list[(seed+offset)%list.length]; }
+  function pickUnique(list, seed, count, step){
+    const chosen=[]; const used=new Set(); let off=0;
+    for(let i=0;i<Math.max(40, list.length*3) && chosen.length<count;i++){
+      const item=pick(list, seed, off);
+      if(!used.has(item)){ used.add(item); chosen.push(item); }
+      off+=step;
     }
+    return chosen;
+  }
 
-    function getLifePath(date) {
-      const digits = date.replace(/[^0-9]/g, "").split("");
-      const sum = digits.reduce((s, d) => s + parseInt(d, 10), 0);
-      return reduceToDigit(sum);
-    }
+  // -------------------------
+  // Zodiac / element
+  // -------------------------
+  function getZodiac(month, day){
+    const m=month,d=day;
+    if((m===3&&d>=21)||(m===4&&d<=19))return"Aries";
+    if((m===4&&d>=20)||(m===5&&d<=20))return"Taurus";
+    if((m===5&&d>=21)||(m===6&&d<=20))return"Gemini";
+    if((m===6&&d>=21)||(m===7&&d<=22))return"Cancer";
+    if((m===7&&d>=23)||(m===8&&d<=22))return"Leo";
+    if((m===8&&d>=23)||(m===9&&d<=22))return"Virgo";
+    if((m===9&&d>=23)||(m===10&&d<=22))return"Libra";
+    if((m===10&&d>=23)||(m===11&&d<=21))return"Scorpio";
+    if((m===11&&d>=22)||(m===12&&d<=21))return"Sagittarius";
+    if((m===12&&d>=22)||(m===1&&d<=19))return"Capricorn";
+    if((m===1&&d>=20)||(m===2&&d<=18))return"Aquarius";
+    return"Pisces";
+  }
+  function getElement(sign){
+    const fire=["Aries","Leo","Sagittarius"];
+    const earth=["Taurus","Virgo","Capricorn"];
+    const air=["Gemini","Libra","Aquarius"];
+    const water=["Cancer","Scorpio","Pisces"];
+    if(fire.includes(sign))return"Fire";
+    if(earth.includes(sign))return"Earth";
+    if(air.includes(sign))return"Air";
+    return"Water";
+  }
+  function getCenterType(lifePath){
+    if([1,8,9].includes(lifePath))return"Body / Action";
+    if([2,3,4].includes(lifePath))return"Heart / Feeling";
+    if([5,6,7].includes(lifePath))return"Head / Thinking";
+    if([11,22,33].includes(lifePath))return"Integrated / Hybrid";
+    return"Mixed";
+  }
 
-    function getZodiac(month, day) {
-      const m = month;
-      const d = day;
-      if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return "Aries";
-      if ((m === 4 && d >= 20) || (m === 5 && d <= 20)) return "Taurus";
-      if ((m === 5 && d >= 21) || (m === 6 && d <= 20)) return "Gemini";
-      if ((m === 6 && d >= 21) || (m === 7 && d <= 22)) return "Cancer";
-      if ((m === 7 && d >= 23) || (m === 8 && d <= 22)) return "Leo";
-      if ((m === 8 && d >= 23) || (m === 9 && d <= 22)) return "Virgo";
-      if ((m === 9 && d >= 23) || (m === 10 && d <= 22)) return "Libra";
-      if ((m === 10 && d >= 23) || (m === 11 && d <= 21)) return "Scorpio";
-      if ((m === 11 && d >= 22) || (m === 12 && d <= 21)) return "Sagittarius";
-      if ((m === 12 && d >= 22) || (m === 1 && d <= 19)) return "Capricorn";
-      if ((m === 1 && d >= 20) || (m === 2 && d <= 18)) return "Aquarius";
-      return "Pisces";
-    }
-
-    function getElement(sign) {
-      const fire = ["Aries", "Leo", "Sagittarius"];
-      const earth = ["Taurus", "Virgo", "Capricorn"];
-      const air = ["Gemini", "Libra", "Aquarius"];
-      const water = ["Cancer", "Scorpio", "Pisces"];
-      if (fire.includes(sign)) return "Fire";
-      if (earth.includes(sign)) return "Earth";
-      if (air.includes(sign)) return "Air";
-      return "Water";
-    }
-
-    function getCenterType(lifePath) {
-      if ([1, 8, 9].includes(lifePath)) return "Body / Action";
-      if ([2, 3, 4].includes(lifePath)) return "Heart / Feeling";
-      if ([5, 6, 7].includes(lifePath)) return "Head / Thinking";
-      if ([11, 22, 33].includes(lifePath)) return "Integrated / Hybrid";
-      return "Mixed";
-    }
-
-    function getDestinyArchetype(lifePath) {
-      const map = {
-        1: "Initiator — self-led, trail-cutting energy",
-        2: "Balancer — relational, sensitive, peace-bringing",
-        3: "Communicator — creative, expressive, story-driven",
-        4: "Builder — stable, structured, foundation-focused",
-        5: "Changer — adaptive, disruptive, freedom-seeking",
-        6: "Guardian — responsible, caring, protector energy",
-        7: "Seer — analytical, intuitive, pattern-tracking",
-        8: "Architect — power, impact, system-level thinking",
-        9: "Releaser — compassionate, closure and completion",
-        11: "Amplifier — heightened perception and intuition",
-        22: "Master Builder — vision plus practical execution",
-        33: "Healer — service, compassion, emotional leadership",
-      };
-      return map[lifePath] || "Adaptive Chosen One blueprint";
-    }
-
-    function getElementDescription(element) {
-      const map = {
-        Fire: "Action-oriented, direct, energized by motion and challenge.",
-        Earth:
-          "Grounded, practical, steady, strengthened by routine and tangible progress.",
-        Air: "Mental, communicative, curious, strengthened by clarity and ideas.",
-        Water:
-          "Emotional, intuitive, deep-feeling, strengthened by honest processing.",
-      };
-      return map[element] || "";
-    }
-
-    function getCoreDrive(lifePath) {
-      // Enneagram-inspired, but framed as "drive"
-      const mod = lifePath % 9 || 9;
-      const map = {
-        1: "Integrity & improvement — wanting things to be right, not sloppy.",
-        2: "Connection & being needed — wanting to feel useful and valued.",
-        3: "Achievement & image — wanting your effort to actually show.",
-        4: "Authenticity & depth — rejecting anything that feels fake.",
-        5: "Understanding & competence — wanting to really know, not guess.",
-        6: "Safety & loyalty — wanting solid people and clear signals.",
-        7: "Possibility & stimulation — wanting life to stay open and alive.",
-        8: "Control & protection — wanting to guard yourself and your people.",
-        9: "Harmony & peace — wanting low chaos and honest calm around you.",
-      };
-      return map[mod] || "Balanced drive that shifts based on context.";
-    }
-
-    function getMoonPhaseName(dateObj) {
-      const reference = new Date(Date.UTC(2000, 0, 6)); // Jan 6, 2000
-      const diff = dateObj.getTime() - reference.getTime();
-      const days = diff / (1000 * 60 * 60 * 24);
-      const synodicMonth = 29.53058867;
-      let phase = (days % synodicMonth) / synodicMonth;
-      if (phase < 0) phase += 1;
-      const index = Math.round(phase * 8) % 8;
-      const names = [
-        "New Moon (reset cycle)",
-        "Waxing Crescent (building quietly)",
-        "First Quarter (turning point)",
-        "Waxing Gibbous (momentum rising)",
-        "Full Moon (emotionally amplified)",
-        "Waning Gibbous (processing and review)",
-        "Last Quarter (decision point)",
-        "Waning Crescent (release and rest)",
-      ];
-      return names[index];
-    }
-
-    function getTimeWindow(mode) {
-      if (mode === "morning")
-        return "06:00 – 11:59 • Morning integration field";
-      if (mode === "afternoon")
-        return "12:00 – 17:59 • Active decision-making field";
-      return "18:00 – 02:00 • Reflection and recalibration field";
-    }
-
-    function pickDeterministic(list, hashSeed, offset) {
-      if (!list.length) return "";
-      const idx = (hashSeed + offset) % list.length;
-      return list[idx];
-    }
-
-    function getConditions(lifePath, element, mode) {
-      const overviewBase =
-        "Today’s conditions are less about fate and more about how your nervous system will respond to pressure, interruption, and opportunity.";
-      const points = [];
-
-      if (element === "Fire") {
-        points.push(
-          "You may feel a push to act quickly. Pause once before you commit."
-        );
-      } else if (element === "Earth") {
-        points.push(
-          "You may cling to familiar routines. Make one small adjustment on purpose."
-        );
-      } else if (element === "Air") {
-        points.push(
-          "Your mind may run ahead of your body. Slow the pace of your decisions."
-        );
-      } else if (element === "Water") {
-        points.push(
-          "Emotions may feel louder than usual. Let them move without making heavy conclusions."
-        );
-      }
-
-      if ([1, 8, 9].includes(lifePath)) {
-        points.push(
-          "Leadership moments may appear in small ways. You do not have to overperform to be effective."
-        );
-      } else if ([2, 3, 6].includes(lifePath)) {
-        points.push(
-          "Relational energy is highlighted. Notice where you over-give or under-speak."
-        );
-      } else if ([7, 5].includes(lifePath)) {
-        points.push(
-          "You may analyze more than act. Choose one action from your thoughts instead of looping them."
-        );
-      }
-
-      if (mode === "morning") {
-        points.push(
-          "How you start your day will echo. Even one grounded choice early can shift the tone."
-        );
-      } else if (mode === "afternoon") {
-        points.push(
-          "You may be tempted to override your body’s signals to stay productive. Listen instead of pushing through everything."
-        );
-      } else {
-        points.push(
-          "Night thoughts may dramatize situations. Capture them, but make decisions in the next clear window."
-        );
-      }
-
-      return {
-        overview: overviewBase,
-        cond1: points[0] || "",
-        cond2: points[1] || "",
-        cond3: points[2] || "",
-      };
-    }
-
-    const SHADOWS = [
-      {
-        name: "The Doubter",
-        explanation:
-          "This pattern whispers that you are not ready or qualified, so you delay movement until the moment passes.",
-        counters: [
-          "Choose one small action that proves the doubt wrong instead of arguing with it.",
-          "Treat doubt as a weather report, not a command. Notice it, then move anyway.",
-        ],
-      },
-      {
-        name: "The Echo",
-        explanation:
-          "This pattern replays old conversations, betrayals, or mistakes until your present moment feels contaminated by the past.",
-        counters: [
-          "Label mental replays as past data. Ask, 'Is this happening now, or just echoing?'",
-          "Introduce one response your old self never tried. That is how you exit the loop.",
-        ],
-      },
-      {
-        name: "The False Mirror",
-        explanation:
-          "This pattern makes you treat other people’s projections as truth about you, even when they are just showing you their fear.",
-        counters: [
-          "When you feel judged, ask, 'Whose standard is this?' and return what is not yours.",
-          "Spend more time with people who respond to your truth, not just your image.",
-        ],
-      },
-      {
-        name: "The Fear-Mind",
-        explanation:
-          "This pattern builds worst-case futures and then treats them as inevitable, so you abandon aligned paths too early.",
-        counters: [
-          "Write down the worst-case story, then write a second story where you move with courage.",
-          "Take one low-risk step toward the aligned path and let reality, not fear, give feedback.",
-        ],
-      },
-      {
-        name: "The Distraction Demon",
-        explanation:
-          "This pattern keeps you scrolling, over-talking, or busy with everyone else’s life so you never sit with your own.",
-        counters: [
-          "Set a 20–25 minute focus block for one meaningful task and protect it like an appointment.",
-          "Delay distraction by five minutes when the urge hits. Often the wave will pass.",
-        ],
-      },
-      {
-        name: "The Abandonment Child",
-        explanation:
-          "This pattern panics when people pull back, and it pushes you into chasing or over-explaining to feel safe.",
-        counters: [
-          "Before you send a reactive message, give yourself 30 minutes and one grounding activity.",
-          "Remind yourself that distance does not automatically equal rejection.",
-        ],
-      },
-      {
-        name: "The Ego Beast",
-        explanation:
-          "This pattern makes every interaction about being right, validated, or seen as superior instead of being aligned.",
-        counters: [
-          "When you feel the need to prove a point, pause and ask, 'What do I actually want from this moment?'",
-          "Practice letting one small thing go without defending yourself and notice that you remain intact.",
-        ],
-      },
+  function getMoonPhaseName(dateObj){
+    const reference=new Date(Date.UTC(2000,0,6));
+    const diff=dateObj.getTime()-reference.getTime();
+    const days=diff/(1000*60*60*24);
+    const synodic=29.53058867;
+    let phase=(days%synodic)/synodic; if(phase<0)phase+=1;
+    const idx=Math.round(phase*8)%8;
+    const names=[
+      "New Moon (reset cycle)","Waxing Crescent (building quietly)","First Quarter (turning point)",
+      "Waxing Gibbous (momentum rising)","Full Moon (emotionally amplified)","Waning Gibbous (processing and review)",
+      "Last Quarter (decision point)","Waning Crescent (release and rest)"
     ];
+    return names[idx];
+  }
+  function getTimeWindow(mode){
+    if(mode==="morning")return"06:00 – 11:59 • Morning integration field";
+    if(mode==="afternoon")return"12:00 – 17:59 • Active decision-making field";
+    return"18:00 – 02:00 • Reflection and recalibration field";
+  }
 
-    const TESTS = [
-      {
-        name: "The Mirror Response",
-        explanation:
-          "When you stand in your truth, other people’s insecurities can surface as criticism, distance, or subtle competition.",
-      },
-      {
-        name: "The Threshold Test",
-        explanation:
-          "As you raise your standards, people may test your boundaries to see if the change is real or temporary.",
-      },
-      {
-        name: "The Manipulation Loop",
-        explanation:
-          "Your stability can attract people who use guilt, flattery, or pressure to secure access to your energy.",
-      },
-      {
-        name: "The Saboteur Response",
-        explanation:
-          "Some people around you may unconsciously pull you back toward old versions of yourself to feel safer.",
-      },
-      {
-        name: "The Temptation Trigger",
-        explanation:
-          "Old habits, people, or patterns may resurface not as a sign, but as a chance to choose differently.",
-      },
-      {
-        name: "The Identity Collision",
-        explanation:
-          "Your old identity and your emerging self may clash, creating tension in how others respond to your growth.",
-      },
-      {
-        name: "The Energy Drainer Test",
-        explanation:
-          "You may be asked to carry emotional weight that is not yours simply because you feel more stable.",
-      },
-      {
-        name: "The Doubt Seed",
-        explanation:
-          "Comments from others may plant small doubts about your path, especially when you are close to a shift.",
-      },
-    ];
+  // =========================================================
+  // PASTE POOLS HERE (you will replace these starter pools)
+  // =========================================================
 
-    const EMOTIONS = [
-      "Calmness",
-      "Anxiety",
-      "Grounded Focus",
-      "Restless Energy",
-      "Curiosity",
-      "Quiet Sadness",
-      "Nostalgia",
-      "Determination",
-      "Overwhelm",
-      "Relief",
-      "Protectiveness",
-      "Vulnerability",
-      "Irritation",
-      "Gratitude",
-      "Resentment",
-      "Hopefulness",
-      "Disappointment",
-      "Cautious Optimism",
-      "Emotional Tiredness",
-      "Excitement",
-      "Confusion",
-      "Clarity",
-      "Loneliness",
-      "Sense of Purpose",
-      "Emotional Numbness",
-      "Empathic Pain",
-      "Awe",
-    ];
+  // --- Destiny phrases (per life path) ---
+  const DESTINY_PHRASES = {
+  1: [
+    "Initiator — self-led energy that moves first and refines later.",
+    "Initiator — you create motion where others wait for permission.",
+    "Initiator — leadership shows up in small decisive moments.",
+    "Initiator — you’re built to start what others hesitate to begin.",
+    "Initiator — your edge is pacing; your gift is ignition.",
+    "Initiator — you do best when intention leads impulse.",
+    "Initiator — independence is power when grounded.",
+    "Initiator — you’re here to set things in motion.",
+    "Initiator — you’re wired for first steps and clean direction.",
+    "Initiator — when focused, you cut paths."
+  ],
+  2: [
+    "Balancer — relational sensitivity with a calming presence.",
+    "Balancer — you stabilize energy through care and attunement.",
+    "Balancer — you notice what people need before they say it.",
+    "Balancer — connection guides your decisions.",
+    "Balancer — your gift is harmony; your boundary is essential.",
+    "Balancer — you’re strongest when you choose, not when you chase.",
+    "Balancer — you bring softness that can also be strong.",
+    "Balancer — your care is powerful when it’s not self-erasing.",
+    "Balancer — you’re built to mend tension without losing yourself.",
+    "Balancer — value yourself as much as you value others."
+  ],
+  3: [
+    "Communicator — expression, creativity, and signal.",
+    "Communicator — you translate inner states into language and momentum.",
+    "Communicator — your voice clears fog when you keep it honest.",
+    "Communicator — your gift is message; your guard is distraction.",
+    "Communicator — you move energy through story and presence.",
+    "Communicator — you’re built to express what others can’t name.",
+    "Communicator — your signal strengthens when you stop performing.",
+    "Communicator — you turn experience into clarity for others.",
+    "Communicator — words can be medicine when they’re true.",
+    "Communicator — expression is your lever for change.",
+    "Communicator — you thrive when your output matches your values.",
+    "Communicator — you’re meant to be heard, not approved."
+  ],
+  4: [
+    "Builder — structure, stability, and foundations.",
+    "Builder — you improve systems through order and consistency.",
+    "Builder — you’re strongest when the plan becomes real steps.",
+    "Builder — your gift is reliability; your edge is rigidity.",
+    "Builder — you make progress tangible.",
+    "Builder — you’re wired for what lasts.",
+    "Builder — discipline becomes freedom when aligned.",
+    "Builder — your calm is built, not accidental.",
+    "Builder — you win through consistency.",
+    "Builder — you create safety through structure."
+  ],
+  5: [
+    "Changer — freedom, adaptation, and bold shifts.",
+    "Changer — you learn by movement, not theory alone.",
+    "Changer — you’re built for pivots and quick recovery.",
+    "Changer — your gift is flexibility; your edge is scattering.",
+    "Changer — new terrain wakes you up.",
+    "Changer — you grow when you choose one direction to go deeper.",
+    "Changer — momentum is yours when commitment is clean.",
+    "Changer — you’re designed to evolve fast.",
+    "Changer — your power increases when you finish what you start.",
+    "Changer — choose direction, then move."
+  ],
+  6: [
+    "Guardian — loyalty, responsibility, and protection.",
+    "Guardian — you read risk early and value solid signals.",
+    "Guardian — trust is earned through consistency and truth.",
+    "Guardian — your gift is preparedness; your edge is worry-loops.",
+    "Guardian — you protect what you love by staying alert.",
+    "Guardian — stability is your medicine.",
+    "Guardian — your strength grows when you verify reality, not fear.",
+    "Guardian — you’re built to hold the line with integrity.",
+    "Guardian — you thrive with clear agreements.",
+    "Guardian — safety improves when your boundaries are respected."
+  ],
+  7: [
+    "Seer — analysis, intuition, and pattern reading.",
+    "Seer — you notice what others miss and connect the dots.",
+    "Seer — your gift is insight; your edge is overthinking.",
+    "Seer — clarity comes when you act on one conclusion.",
+    "Seer — you’re built to decode patterns and timing.",
+    "Seer — your calm returns when you reduce inputs.",
+    "Seer — knowledge becomes power when it becomes action.",
+    "Seer — your mind is sharp; pace it.",
+    "Seer — you thrive when you stop looping and start choosing.",
+    "Seer — awareness is your advantage."
+  ],
+  8: [
+    "Architect — power, impact, and command energy.",
+    "Architect — you protect what you love and respect clarity.",
+    "Architect — your gift is strength; your edge is intensity spikes.",
+    "Architect — leadership is natural when you stay regulated.",
+    "Architect — you’re built to hold boundaries that others avoid.",
+    "Architect — channel force into precision.",
+    "Architect — power improves when it’s calm.",
+    "Architect — you move best when your yes is rare and true.",
+    "Architect — protect your energy like an asset.",
+    "Architect — you’re designed to build outcomes."
+  ],
+  9: [
+    "Releaser — compassion, closure, and completion.",
+    "Releaser — you bring calm to chaos and soften sharp rooms.",
+    "Releaser — your gift is peace; your edge is disappearing.",
+    "Releaser — harmony is strength when it includes truth.",
+    "Releaser — you’re built to finish cycles cleanly.",
+    "Releaser — choose your voice before you choose comfort.",
+    "Releaser — your power rises when you stop avoiding conflict.",
+    "Releaser — calm is your signature when you stay present.",
+    "Releaser — you thrive when your boundaries protect your peace.",
+    "Releaser — closure creates freedom."
+  ],
+  11: [
+    "Amplifier — heightened perception and strong signal sensitivity.",
+    "Amplifier — you notice subtle shifts before others do.",
+    "Amplifier — your gift is insight; your edge is overstimulation.",
+    "Amplifier — you thrive when your environment is clean.",
+    "Amplifier — strong intuition requires strong boundaries.",
+    "Amplifier — pace your inputs to protect your clarity.",
+    "Amplifier — you’re designed for depth and discernment.",
+    "Amplifier — trust your signal, verify your story.",
+    "Amplifier — your calm becomes guidance.",
+    "Amplifier — regulation is your superpower."
+  ],
+  22: [
+    "Master Builder — vision plus execution.",
+    "Master Builder — you build what lasts through real steps.",
+    "Master Builder — your gift is scale; your edge is pressure.",
+    "Master Builder — choose the next brick, not the whole wall.",
+    "Master Builder — big outcomes require pacing.",
+    "Master Builder — your strength is structure with vision.",
+    "Master Builder — don’t rush the foundation.",
+    "Master Builder — you’re designed for impact that holds.",
+    "Master Builder — consistency turns vision into reality.",
+    "Master Builder — finish what matters."
+  ],
+  33: [
+    "Healer — compassion with leadership tone.",
+    "Healer — you carry care that can change rooms.",
+    "Healer — your gift is service; your edge is overgiving.",
+    "Healer — protect your energy to protect your purpose.",
+    "Healer — you’re designed to lead with heart and clarity.",
+    "Healer — boundaries keep your care clean.",
+    "Healer — your softness is strong when regulated.",
+    "Healer — you’re here to help without self-erasing.",
+    "Healer — choose who gets access to your care.",
+    "Healer — your presence can restore order."
+  ]
+};
 
-    function getSupport(element) {
-      const crystalByElement = {
-        Fire: {
-          crystal: "Carnelian or Citrine",
-          note: "Supports courage, visible action, and forward motion without burnout.",
-        },
-        Earth: {
-          crystal: "Black Tourmaline or Smoky Quartz",
-          note: "Supports grounding, stability, and protection when you feel overloaded.",
-        },
-        Air: {
-          crystal: "Amethyst or Lapis Lazuli",
-          note: "Supports mental clarity, calm thinking, and focused communication.",
-        },
-        Water: {
-          crystal: "Rose Quartz or Moonstone",
-          note: "Supports emotional processing, self-compassion, and gentle release.",
-        },
-      };
+  // --- Element phrases (per element) ---
+  const ELEMENT_PHRASES = {
+  Fire: [
+    "Action-forward temperament — energized by motion and challenge.",
+    "Fire field — strong spark, needs pacing to stay clean.",
+    "Fire tone — confident when directed, scattered when rushed.",
+    "Fire current — intention first, action second.",
+    "Fire energy — bold movement works best with restraint.",
+    "Fire temperament — power rises when it’s regulated.",
+    "Fire field — momentum is medicine when it’s focused.",
+    "Fire tone — your drive is useful when it’s precise.",
+    "Fire current — don’t confuse heat with truth.",
+    "Fire energy — choose one direction and commit."
+  ],
+  Earth: [
+    "Grounded temperament — strengthened by routine and tangible progress.",
+    "Earth field — steady build energy, thrives on consistency.",
+    "Earth tone — practical, protective, resilient under pressure.",
+    "Earth current — small steps create big stability.",
+    "Earth energy — reliability is power when boundaries exist.",
+    "Earth temperament — your calm comes from structure.",
+    "Earth field — you win through follow-through.",
+    "Earth tone — keep it simple, keep it steady.",
+    "Earth current — don’t carry what isn’t yours.",
+    "Earth energy — consistency beats intensity."
+  ],
+  Air: [
+    "Mental temperament — clarity, ideas, and communication.",
+    "Air field — quick mind, needs embodiment to stay balanced.",
+    "Air tone — curious, strategic, responsive to truth.",
+    "Air current — clean thinking beats noisy thinking.",
+    "Air energy — reduce inputs to restore clarity.",
+    "Air temperament — your words shape outcomes.",
+    "Air field — avoid looping by choosing one conclusion.",
+    "Air tone — precision beats volume.",
+    "Air current — don’t chase every idea; choose one.",
+    "Air energy — clarity is a weapon when used gently."
+  ],
+  Water: [
+    "Emotional temperament — intuitive processing and deep feeling.",
+    "Water field — sensitivity is power when regulated.",
+    "Water tone — honest emotion creates clean direction.",
+    "Water current — feel it, name it, then choose.",
+    "Water energy — softness becomes strength with boundaries.",
+    "Water temperament — your intuition improves in calm environments.",
+    "Water field — avoid heavy conclusions during emotional spikes.",
+    "Water tone — slow down to hear your real signal.",
+    "Water current — release what isn’t yours to carry.",
+    "Water energy — peace returns when feelings are acknowledged."
+  ]
+};
 
-      const scentByElement = {
-        Fire: {
-          scent: "Citrus (orange, bergamot) or cinnamon",
-          note: "Keeps energy bright but controlled so you move with intention, not impulse.",
-        },
-        Earth: {
-          scent: "Sandalwood, vetiver, or cedarwood",
-          note: "Deepens grounding and helps you feel steady when things around you move quickly.",
-        },
-        Air: {
-          scent: "Peppermint, eucalyptus, or rosemary",
-          note: "Clears mental fog and supports clear decisions without overthinking everything.",
-        },
-        Water: {
-          scent: "Lavender, jasmine, or frankincense",
-          note: "Soothes emotional spikes and makes it easier to rest your nervous system.",
-        },
-      };
+  // --- Center phrases (per center) ---
+  const CENTER_PHRASES = {
+  "Body / Action": [
+    "Body-led center — you process through action and responsibility.",
+    "Action center — movement clears your mind.",
+    "Body center — you carry weight well; share it on purpose.",
+    "Body-led — you respond best when you do one thing fully.",
+    "Action-first — your clarity shows up after movement.",
+    "Body center — protect your energy from default responsibility.",
+    "Action center — don’t push through every signal.",
+    "Body-led — your boundary is your strength.",
+    "Body center — pace turns effort into power.",
+    "Action center — regulate before you respond."
+  ],
+  "Heart / Feeling": [
+    "Heart-led center — you process through emotion and connection.",
+    "Feeling center — you sense relational shifts quickly.",
+    "Heart center — empathy is a gift with a boundary.",
+    "Heart-led — don’t self-erase to keep things smooth.",
+    "Feeling center — your signal improves when you slow down.",
+    "Heart-led — speak truth before you seek comfort.",
+    "Heart center — care is power when it’s clean.",
+    "Feeling center — avoid chasing validation today.",
+    "Heart-led — your presence affects rooms.",
+    "Heart center — protect your softness without closing it."
+  ],
+  "Head / Thinking": [
+    "Mind-led center — you process through logic, patterns, and meaning.",
+    "Thinking center — clarity is your anchor; avoid looping.",
+    "Head center — insight is strong; pace your output.",
+    "Mind-led — choose one conclusion and act on it.",
+    "Thinking center — reduce inputs to restore accuracy.",
+    "Head center — don’t over-explain to resistant people.",
+    "Mind-led — precision beats volume.",
+    "Thinking center — your calm returns through structure.",
+    "Head center — stop solving what you didn’t create.",
+    "Mind-led — answers appear after one clean action."
+  ],
+  "Integrated / Hybrid": [
+    "Hybrid center — you read rooms on multiple levels.",
+    "Integrated center — you can think, feel, and act with range.",
+    "Hybrid field — protect your bandwidth from being used.",
+    "Integrated — your strength is versatility with boundaries.",
+    "Hybrid — avoid becoming emotional infrastructure for others.",
+    "Integrated — choose one lane per window.",
+    "Hybrid — your signal is strong; keep it clean.",
+    "Integrated — pace your access and your output.",
+    "Hybrid — don’t carry everyone’s weight.",
+    "Integrated — regulation keeps you powerful."
+  ],
+  "Mixed": [
+    "Mixed center — your response shifts by context; choose steadiness on purpose.",
+    "Mixed field — adaptability is strength when guided by values.",
+    "Mixed center — regulate first, then decide.",
+    "Mixed — don’t let mood choose your commitments.",
+    "Mixed field — keep your boundaries consistent.",
+    "Mixed — simplify your next step.",
+    "Mixed center — choose one priority per window.",
+    "Mixed — clarity improves when your inputs are reduced.",
+    "Mixed field — finish one thing today.",
+    "Mixed — choose clean direction over reaction."
+  ]
+};
 
-      const actionMap = {
-        Fire: {
-          action: "Take a 10–15 minute walk without your phone.",
-          note: "Let your body move so your mind can slow down and reset.",
-        },
-        Earth: {
-          action: "Organize one small physical space around you.",
-          note: "Bringing order to your environment supports clarity in your decisions.",
-        },
-        Air: {
-          action: "Write down the three thoughts circling the most today.",
-          note: "Once they are on paper, you can choose which ones deserve action.",
-        },
-        Water: {
-          action: "Name your main feeling in one sentence and breathe with it.",
-          note: "Feelings ease when they are acknowledged instead of argued with.",
-        },
-      };
+  // --- Enneagram-coded drive labels + core drive phrases ---
+  const DRIVE_LABELS = {
+  1:"Drive-1 (Standards)",
+  2:"Drive-2 (Connection)",
+  3:"Drive-3 (Results)",
+  4:"Drive-4 (Authenticity)",
+  5:"Drive-5 (Clarity)",
+  6:"Drive-6 (Security)",
+  7:"Drive-7 (Possibility)",
+  8:"Drive-8 (Control)",
+  9:"Drive-9 (Peace)"
+};
 
-      return {
-        crystal: crystalByElement[element] || crystalByElement.Earth,
-        scent: scentByElement[element] || scentByElement.Water,
-        action: actionMap[element] || actionMap.Air,
-      };
+  const CORE_DRIVE_PHRASES = {
+  1: [
+    "Integrity & improvement — you want things done right.",
+    "Standards drive — you notice what needs refining.",
+    "Drive-1 — you value quality over shortcuts.",
+    "Drive-1 — your edge is softness with yourself.",
+    "Drive-1 — don’t turn pressure into self-criticism.",
+    "Drive-1 — precision is power when it stays calm.",
+    "Drive-1 — correct what matters, ignore what doesn’t.",
+    "Drive-1 — your calm improves your accuracy.",
+    "Drive-1 — aim for clean, not perfect.",
+    "Drive-1 — choose one fix that changes the system."
+  ],
+  2: [
+    "Connection & value — you want to matter to real people.",
+    "Support drive — you give deeply; keep your boundary.",
+    "Drive-2 — care is strongest when chosen, not owed.",
+    "Drive-2 — don’t chase closeness at your expense.",
+    "Drive-2 — help in ways that don’t drain you.",
+    "Drive-2 — love doesn’t require over-explaining.",
+    "Drive-2 — choose mutual energy today.",
+    "Drive-2 — you don’t have to rescue to be valuable.",
+    "Drive-2 — protect your softness with clarity.",
+    "Drive-2 — your presence is enough."
+  ],
+  3: [
+    "Results & visibility — you want effort to show.",
+    "Momentum drive — progress matters; avoid proving.",
+    "Drive-3 — don’t rush for approval.",
+    "Drive-3 — choose substance over performance.",
+    "Drive-3 — real wins are quiet and repeatable.",
+    "Drive-3 — focus on outcomes, not applause.",
+    "Drive-3 — pace turns effort into power.",
+    "Drive-3 — do the real thing, not the loud thing.",
+    "Drive-3 — let consistency speak.",
+    "Drive-3 — clean progress beats fast progress."
+  ],
+  4: [
+    "Authenticity & depth — you reject anything fake.",
+    "Truth drive — depth over performance.",
+    "Drive-4 — don’t romanticize the pain.",
+    "Drive-4 — feelings are information, not identity.",
+    "Drive-4 — choose expression without spiraling.",
+    "Drive-4 — your gift is honesty with beauty.",
+    "Drive-4 — don’t isolate to feel special.",
+    "Drive-4 — create something real today.",
+    "Drive-4 — your clarity improves when you act.",
+    "Drive-4 — stay present with what is."
+  ],
+  5: [
+    "Understanding & competence — you want to actually know.",
+    "Clarity drive — knowledge calms your system.",
+    "Drive-5 — don’t hoard insight; use one piece today.",
+    "Drive-5 — one action breaks the loop.",
+    "Drive-5 — reduce inputs to restore accuracy.",
+    "Drive-5 — protect your bandwidth.",
+    "Drive-5 — your power increases when you decide.",
+    "Drive-5 — stop researching what you already know.",
+    "Drive-5 — choose a conclusion, then move.",
+    "Drive-5 — clarity comes after commitment."
+  ],
+  6: [
+    "Safety & loyalty — you want solid signals and people.",
+    "Security drive — trust is built through consistency.",
+    "Drive-6 — verify reality, don’t obey fear.",
+    "Drive-6 — one grounded step restores confidence.",
+    "Drive-6 — don’t assume worst-case; check facts.",
+    "Drive-6 — your instincts sharpen in calm.",
+    "Drive-6 — choose reliable people, not loud people.",
+    "Drive-6 — boundaries create safety.",
+    "Drive-6 — keep agreements clean today.",
+    "Drive-6 — stability is a strategy."
+  ],
+  7: [
+    "Possibility & stimulation — you want life to stay alive.",
+    "Expansion drive — choose one direction to go deeper.",
+    "Drive-7 — don’t escape discomfort with distraction.",
+    "Drive-7 — one commitment creates freedom later.",
+    "Drive-7 — finish one thing before starting three.",
+    "Drive-7 — choose depth over variety today.",
+    "Drive-7 — keep your yes realistic.",
+    "Drive-7 — calm focus beats excitement spikes.",
+    "Drive-7 — direction creates momentum.",
+    "Drive-7 — choose the real win."
+  ],
+  8: [
+    "Control & protection — you guard yourself and your people.",
+    "Power drive — channel intensity into clean boundaries.",
+    "Drive-8 — strength improves when it’s calm.",
+    "Drive-8 — don’t escalate; get precise.",
+    "Drive-8 — protect your energy like an asset.",
+    "Drive-8 — choose authority without aggression.",
+    "Drive-8 — your no is a tool.",
+    "Drive-8 — don’t fight what doesn’t matter.",
+    "Drive-8 — lead with clarity.",
+    "Drive-8 — pace your power."
+  ],
+  9: [
+    "Harmony & calm — you want low chaos and clean peace.",
+    "Peace drive — don’t disappear to keep things smooth.",
+    "Drive-9 — choose truth before comfort.",
+    "Drive-9 — your voice matters today.",
+    "Drive-9 — small boundaries protect big peace.",
+    "Drive-9 — don’t numb out; stay present.",
+    "Drive-9 — one decision breaks stagnation.",
+    "Drive-9 — clean peace requires clarity.",
+    "Drive-9 — choose one priority and finish it.",
+    "Drive-9 — calm doesn’t mean silent."
+  ]
+};
+
+  // --- Core paragraphs (Blueprint + Calibration Point) ---
+  const BLUEPRINT_TEMPLATES = [
+  "Your core field today blends {destiny} with a {element} temperament in {center}. This shapes your timing, tone, and follow-through.",
+  "Your signature right now reads as {destiny} expressed through {center}, with a {element} temperament underneath. Use that to choose your pace.",
+  "Today’s blueprint: {destiny} + {element} temperament + {center}. This combination decides how you handle pressure and opportunity.",
+  "Your core pattern for this window is {destiny} operating through {center}. Your {element} temperament is the engine behind the decisions.",
+  "Your field today is {destiny} with a {element} temperament, expressed through {center}. Keep your choices simple and clean.",
+  "Your baseline today reads as {destiny} in {center} with a {element} temperament. That determines what feels draining vs. empowering.",
+  "This window highlights {destiny} energy. With {center} processing and {element} temperament, your best move is calm precision.",
+  "Your core signal today: {destiny}. Your {element} temperament adds intensity, while {center} sets how you respond to people and pressure.",
+  "Right now you’re operating as {destiny} with a {element} temperament through {center}. Let your values lead the speed.",
+  "Your blueprint today is built from {destiny}, {element} temperament, and {center}. The goal is regulation before reaction.",
+  "Your core field reads as {destiny} expressed through {center}, powered by {element} temperament. This is how you keep clarity in motion.",
+  "Today’s inner map: {destiny} + {center} + {element} temperament. Make your decisions from truth, not urgency.",
+  "This window favors your {destiny} qualities. With {center} processing and {element} temperament, protect your attention and follow through.",
+  "Your field today is {destiny} in {center} with a {element} temperament. Choose one priority and let it be enough.",
+  "Your core pattern reads as {destiny} and {center}, guided by a {element} temperament. Your power is in pacing and clean boundaries.",
+  "The structure of your energy today: {destiny} expressed through {center}, with {element} temperament driving. Keep the signal clean.",
+  "Your core tone today comes from {center}. Your {element} temperament adds force. Your {destiny} decides how you deliver it.",
+  "Your field is tuned to {destiny}, filtered through {center}, and fueled by {element} temperament. That’s why one honest step matters.",
+  "You’re moving through this window as {destiny} with {element} temperament in {center}. Choose the smallest aligned action first.",
+  "Your signature today reads as {destiny}. The way you process is {center}. The way you move is {element} temperament. Keep it simple.",
+  "Today’s blueprint is {destiny} expressed through {center}, powered by {element} temperament. Clarity comes from restraint, not force.",
+  "Your core field today: {destiny} + {center} + {element} temperament. Let regulation decide the pace instead of emotion.",
+  "Your pattern for this window is {destiny} in {center} with a {element} temperament. Stay grounded and choose one direction.",
+  "You’re tuned as {destiny} expressed through {center}, with a {element} temperament underneath. That’s the recipe for your clarity today.",
+  "This window highlights {destiny}. With {center} processing and {element} temperament, your best move is calm consistency.",
+  "Your core field reads as {destiny} with a {element} temperament through {center}. Avoid overexplaining; choose clean actions.",
+  "Your internal weather today is shaped by {destiny}, {center}, and {element} temperament. Treat urgency as noise, not truth.",
+  "Today’s signal is {destiny} expressed through {center}, powered by {element} temperament. Choose truth before speed.",
+  "Your baseline today: {destiny} + {element} temperament + {center}. Let your next step be honest, not impressive.",
+  "You’re operating as {destiny} in {center}, fueled by {element} temperament. Protect your energy from being borrowed.",
+  "Your blueprint for this window is {destiny} expressed through {center} with a {element} temperament. Small aligned moves win today.",
+  "Your core field reads as {destiny}. Your {center} decides your processing. Your {element} temperament decides your momentum."
+];
+  const CALIBRATION_TEMPLATES = [
+  "Calibration Point: slow your response by one breath. That single pause keeps your signal clean.",
+  "Calibration Point: choose one priority and finish it. Momentum comes from completion.",
+  "Calibration Point: don’t chase approval. Choose substance and let results speak later.",
+  "Calibration Point: protect your attention like money. Don’t spend it on noise.",
+  "Calibration Point: if you feel rushed, reduce tasks—not effort. Keep your pace honest.",
+  "Calibration Point: speak once, clearly. Overexplaining is a leak.",
+  "Calibration Point: if you feel emotional heat, wait to decide. Capture the thought, decide in clarity.",
+  "Calibration Point: don’t fix what isn’t yours. Boundaries restore power fast.",
+  "Calibration Point: choose the smallest aligned action. Consistency beats intensity.",
+  "Calibration Point: regulate first, then respond. Reaction is expensive.",
+  "Calibration Point: do not negotiate your standards mid-stress. Keep them quiet and consistent.",
+  "Calibration Point: if you feel pulled to prove, choose truth instead. Proof comes later.",
+  "Calibration Point: reduce inputs—fewer opinions, fewer tabs, fewer debates. Clarity returns.",
+  "Calibration Point: keep your yes rare today. Say yes only where you can follow through.",
+  "Calibration Point: name the facts, release the story. Stories inflate pressure.",
+  "Calibration Point: avoid reactive messaging. Give yourself a time buffer before responding.",
+  "Calibration Point: move your body before you make a heavy conclusion.",
+  "Calibration Point: if you feel scattered, choose one lane for this window.",
+  "Calibration Point: choose calm authority. Loudness is not power.",
+  "Calibration Point: let discomfort exist without escaping. One honest minute restores control.",
+  "Calibration Point: stop replaying. Start choosing. One action breaks loops.",
+  "Calibration Point: you don’t need more information—you need one decision.",
+  "Calibration Point: release what isn’t yours to carry. Your energy is an asset.",
+  "Calibration Point: simplify your environment. Order outside supports order inside.",
+  "Calibration Point: don’t pick fights with projections. Keep walking forward.",
+  "Calibration Point: choose depth over variety. Finish one thing before starting three.",
+  "Calibration Point: hold your boundary without explaining it. Clean boundaries are quiet.",
+  "Calibration Point: prioritize regulation over intensity. Intensity without regulation burns you.",
+  "Calibration Point: choose the next step, not the whole staircase. Focus restores power.",
+  "Calibration Point: if you’re tired, don’t interpret people. Rest before meaning-making.",
+  "Calibration Point: move slower than impulse, faster than doubt. That’s your sweet spot.",
+  "Calibration Point: keep your standards high and your reactions low."
+];
+
+  // --- Conditions overview (must include {driveWeather}) ---
+  const CONDITIONS_OVERVIEW_POOL = [
+  "Today’s atmosphere favors pacing over force — {driveWeather} pressure can turn momentum into urgency if you chase a feeling.",
+  "Conditions today respond to regulation more than intensity — {driveWeather} pressure may amplify sensitivity to feedback.",
+  "The field today rewards clean timing — {driveWeather} pressure can mistake motion for progress.",
+  "Today’s environment favors clarity before action — {driveWeather} pressure can pull you toward proving instead of choosing.",
+  "The atmosphere today is less about outcome and more about tone — {driveWeather} pressure may try to speed up your decisions.",
+  "Conditions today favor simple priorities — {driveWeather} pressure can inflate what doesn’t matter.",
+  "The field today supports calm strength — {driveWeather} pressure may tempt you to react instead of respond.",
+  "Today’s atmosphere rewards restraint — {driveWeather} pressure can push you to overcommit too early.",
+  "Conditions today highlight boundaries — {driveWeather} pressure can negotiate your standards if you’re not watching.",
+  "The environment today favors honesty — {driveWeather} pressure may pull you toward performance over truth."
+];
+
+  // --- Condition families ---
+  const CONDITION_FAMILIES = {
+  pace: [
+    "Your pace is the lever today. One calm decision early shifts the whole window.",
+    "Move slower than your impulse, faster than your doubt.",
+    "Do one thing fully instead of three things halfway.",
+    "If you feel rushed, that’s a signal — not a command.",
+    "Choose steadiness over speed. Your results improve when your system is calm.",
+    "Start with one grounded action before you check messages or opinions.",
+    "Don’t sprint emotionally. Walk your choices into place.",
+    "If you’re scattered, reduce tasks — not effort.",
+    "A calm start prevents a noisy finish.",
+    "Precision beats urgency today."
+  ],
+  social: [
+    "Relational energy is highlighted. Say less, mean more.",
+    "Not everyone deserves access to your mood today.",
+    "If someone tests your tone, respond with boundaries, not heat.",
+    "Watch who honors your limits without a debate.",
+    "Don’t over-explain your decisions to people committed to misunderstanding you.",
+    "Choose conversations that leave you clearer, not smaller.",
+    "If someone pushes, pause — then choose.",
+    "Keep your standards quiet and consistent.",
+    "Don’t argue with projections. Keep walking.",
+    "Respect doesn’t require loudness."
+  ],
+  noise: [
+    "Mental noise can inflate small problems. Name the facts and ignore the story.",
+    "Old thoughts may return like headlines. Let them pass without engagement.",
+    "If you feel scattered, reduce inputs: fewer tabs, fewer voices, fewer opinions.",
+    "Notice what your body knows before your mind performs.",
+    "Cut one distraction on purpose. That single cut restores power.",
+    "You don’t need more information — you need one decision.",
+    "Stop replaying. Start choosing.",
+    "If your mind speeds up, slow your breathing down.",
+    "Don’t confuse inner noise with intuition.",
+    "Clarity returns when stimulation drops."
+  ],
+  opportunity: [
+    "A small opportunity may appear disguised as a minor inconvenience. Stay present.",
+    "What opens today may require patience, not force.",
+    "Do not chase everything. Choose the one door that matches your values.",
+    "A clean yes beats a loud yes. Keep commitments realistic.",
+    "If something feels aligned, take one low-risk step and let reality respond.",
+    "The right move may be small — but true.",
+    "If you feel pulled, verify: is it aligned or just exciting?",
+    "Timing matters today. Don’t force what needs space.",
+    "One follow-through beats five new plans.",
+    "Choose the next step, not the whole staircase."
+  ],
+  boundaries: [
+    "Your power is in your boundary, not your reaction.",
+    "If someone pulls you into drama, treat it as weather and keep walking.",
+    "Protect your attention like money — because it buys your future.",
+    "Your kindness is not an obligation to carry someone else’s chaos.",
+    "Choose one boundary you’ll keep today even if nobody claps.",
+    "Not every request is your assignment.",
+    "You can be kind and still be unavailable.",
+    "Don’t negotiate your standards mid-stress.",
+    "Access to you should be earned, not assumed.",
+    "Your calm is your authority."
+  ]
+};
+
+  // =========================================================
+  // End paste zones
+  // =========================================================
+
+  function driveCodeFromLifePath(lifePath){
+    const mod=lifePath%9||9;
+    return mod; // 1–9
+  }
+
+  function buildConditions(seed, mode, driveWeather){
+    const overview = pick(CONDITIONS_OVERVIEW_POOL, seed, 5).replace("{driveWeather}", driveWeather);
+
+    // Mode-based family rotation
+    let c1, c2, c3;
+    if(mode==="morning"){
+      c1 = pick(CONDITION_FAMILIES.pace, seed, 7);
+      c2 = pick(CONDITION_FAMILIES.opportunity, seed, 11);
+      c3 = pick(CONDITION_FAMILIES.noise, seed, 13);
+    } else if(mode==="afternoon"){
+      c1 = pick(CONDITION_FAMILIES.social, seed, 7);
+      c2 = pick(CONDITION_FAMILIES.boundaries, seed, 11);
+      c3 = pick(CONDITION_FAMILIES.pace, seed, 13);
+    } else {
+      c1 = pick(CONDITION_FAMILIES.noise, seed, 7);
+      c2 = pick(CONDITION_FAMILIES.boundaries, seed, 11);
+      c3 = pick(CONDITION_FAMILIES.social, seed, 13);
     }
 
-    function getExposurePattern(center, element) {
-      // How they tend to be tested / used, in grounded language
-      if (center.startsWith("Heart")) {
-        return "Because you feel deeply, people who are less regulated may lean on your empathy without giving the same care back. Your test is to support without self-erasing.";
-      }
-      if (center.startsWith("Body")) {
-        return "Because you move first and carry weight well, others may quietly expect you to always 'handle it.' Your test is to notice when responsibility stops being shared.";
-      }
-      if (center.startsWith("Head")) {
-        return "Because you can see angles and patterns, people may come to you for answers but ignore your limits. Your test is to stop over-explaining when you feel drained.";
-      }
-      if (center.startsWith("Integrated")) {
-        return "Because you can read the room on multiple levels, some people may treat you like emotional infrastructure. Your test is to remember you are a person, not a system.";
-      }
-      // fallback by element
-      if (element === "Fire") {
-        return "Your drive and intensity can attract people who want progress without doing their share. Your test is to protect your energy from being used as free fuel.";
-      }
-      if (element === "Earth") {
-        return "Your reliability can make people assume you will always be there, even when they are careless. Your test is to notice when stability turns into quiet resentment.";
-      }
-      if (element === "Air") {
-        return "Your communication and ideas can be borrowed without proper credit. Your test is to protect your concepts and value your clarity as an asset.";
-      }
-      if (element === "Water") {
-        return "Your emotional range can make you the unofficial therapist for everyone around you. Your test is to stop absorbing what others refuse to manage.";
-      }
-      return "Your sensitivity and strength can both be targeted. Your test is to notice where access to you is taken for granted instead of appreciated.";
-    }
+    return { overview, c1, c2, c3 };
+  }
 
-    document.getElementById("reportForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+  // Lightweight Shadow/Test/Emotion (kept minimal here; you can expand later if you want)
+  const SHADOWS = [
+  { name:"The Doubter", explanation:"It whispers you’re not ready, so you delay until the moment passes.", counters:["Take one small action that proves capability.", "Treat doubt as weather, not a command."] },
+  { name:"The Echo", explanation:"Old conversations replay until the present feels contaminated by the past.", counters:["Ask: 'Now or echo?'", "Respond like your updated self once."] },
+  { name:"The False Mirror", explanation:"You accept other people’s projections as truth about you.", counters:["Ask: 'Whose standard is this?'", "Return what isn’t yours to carry."] },
+  { name:"The Fear-Mind", explanation:"Worst-case futures feel inevitable, so you abandon aligned paths early.", counters:["Write the fear story, then write the courage story.", "Take one low-risk step and let reality answer."] },
+  { name:"The Distraction Demon", explanation:"Scrolling and noise keep you from sitting with your own direction.", counters:["Protect a 25-minute focus block.", "Delay distraction five minutes and watch the urge pass."] },
+  { name:"The Abandonment Child", explanation:"Distance feels like rejection, so you chase or overexplain for safety.", counters:["Wait 30 minutes before reactive contact.", "Remind yourself: distance ≠ rejection."] },
+  { name:"The Ego Beast", explanation:"You need to be right or superior instead of aligned.", counters:["Ask: 'What do I actually want here?'", "Let one small thing go without defending."] },
+  { name:"The Overgiver", explanation:"You pour out to be valued, then resent the emptiness.", counters:["Give only what you can give cleanly.", "Ask for reciprocity once, clearly."] },
+  { name:"The Performer", explanation:"You chase validation and lose your real signal.", counters:["Choose substance over applause.", "Do the real thing privately."] },
+  { name:"The Silent Rage", explanation:"You stay polite, then explode later from unspoken boundaries.", counters:["Name one boundary early.", "Choose calm honesty before pressure builds."] },
+  { name:"The People-Pacer", explanation:"You match other people’s urgency and lose your own rhythm.", counters:["Slow your response by one breath.", "Choose your pace, then move."] },
+  { name:"The Rescuer Loop", explanation:"You fix people to feel safe, then feel used.", counters:["Ask: 'Did they request help?'", "Offer one step, not your whole system."] },
+  { name:"The Approval Hook", explanation:"You measure yourself through others’ reactions.", counters:["Return to your values list.", "Choose one action you’d do even unseen."] },
+  { name:"The Hyper-Vigilant", explanation:"You scan for threats so hard you can’t receive good.", counters:["Name three safe facts in the room.", "Limit inputs and reset your body."] },
+  { name:"The Control Grip", explanation:"You tighten control when uncertain, causing friction and burnout.", counters:["Control the next step only.", "Trade force for structure."] },
+  { name:"The Avoider", explanation:"You postpone the hard truth and pay interest later.", counters:["Say the clean sentence now.", "Do the smallest hard thing first."] },
+  { name:"The Spiral Narrator", explanation:"Your mind turns one moment into a full story of doom.", counters:["Separate facts from story.", "Take one grounding action."] },
+  { name:"The Scarcity Lens", explanation:"You act like time and opportunity are running out.", counters:["Choose calm pace over panic pace.", "Focus on one deliverable."] },
+  { name:"The Comparison Ghost", explanation:"You measure your worth against someone else’s highlight reel.", counters:["Compare only to yesterday’s you.", "Create one asset that proves growth."] },
+  { name:"The Trust Tester", explanation:"You provoke to see who stays, then regret the damage.", counters:["Ask directly for reassurance once.", "Choose consistency over tests."] },
+  { name:"The Isolation Cape", explanation:"You disappear to avoid being misunderstood.", counters:["Share one truth with a safe person.", "Take one public step anyway."] },
+  { name:"The Overthinker", explanation:"You loop analysis until action feels impossible.", counters:["Choose one conclusion.", "Act for 10 minutes before thinking again."] },
+  { name:"The Emotional Accountant", explanation:"You keep a secret ledger of who owes you care.", counters:["Ask for what you need plainly.", "Give only when it stays clean."] },
+  { name:"The Guilt Magnet", explanation:"You accept guilt to keep peace and lose your boundary.", counters:["Name your limit without apology.", "Let discomfort exist without fixing it."] },
+  { name:"The Drama Gravity", explanation:"Chaos feels familiar, so calm feels suspicious.", counters:["Practice calm without explanation.", "Choose boring consistency today."] },
+  { name:"The Hyper-Fixer", explanation:"You fix details to avoid the real decision.", counters:["Decide the direction first.", "Fix only what supports the decision."] },
+  { name:"The Self-Betrayer", explanation:"You abandon your truth to avoid conflict or loneliness.", counters:["Say one honest sentence.", "Choose short discomfort over long regret."] },
+  { name:"The Undervaluing", explanation:"You downplay your value, then feel unseen.", counters:["Name your contribution once.", "Charge or request respect accordingly."] },
+  { name:"The Harsh Judge", explanation:"You punish yourself for being human.", counters:["Replace criticism with correction.", "Aim for clean, not perfect."] },
+  { name:"The Revenge Fantasy", explanation:"You replay how you’ll prove them wrong and lose presence.", counters:["Put that energy into one asset.", "Win quietly through consistency."] },
+  { name:"The Future Trance", explanation:"You live in what’s next and miss what’s real.", counters:["Do one task fully in the present.", "Ground through your senses for 60 seconds."] },
+  { name:"The Past Anchor", explanation:"You treat old pain as your identity.", counters:["Name the pain as history.", "Choose one new behavior today."] },
+  { name:"The Boundary Negotiator", explanation:"You explain your limits until they disappear.", counters:["State the boundary once.", "Let the silence do the work."] },
+  { name:"The Energy Leaker", explanation:"You give your attention to low-value arguments.", counters:["Protect your attention budget.", "Exit debates that don’t build your life."] },
+  { name:"The Perfection Trap", explanation:"You wait to be flawless before moving.", counters:["Ship a 'version one' today.", "Improve after movement, not before."] },
+  { name:"The Mood Pilot", explanation:"Your mood decides your commitments.", counters:["Use a schedule, not a feeling.", "Do 10 minutes regardless of mood."] },
+  { name:"The Inner Prosecutor", explanation:"You build a case against yourself and call it truth.", counters:["List evidence for your growth.", "Choose the next corrective step."] },
+  { name:"The Hollow Yes", explanation:"You agree to avoid tension, then resent it.", counters:["Say no once today.", "Replace 'yes' with a clean alternative."] },
+  { name:"The Loud Silence", explanation:"You stop speaking instead of setting a boundary.", counters:["Name the issue calmly.", "Ask for a clear agreement."] },
+  { name:"The Protection Wall", explanation:"You block connection to avoid pain and miss support.", counters:["Let one safe person in slightly.", "Practice boundaries without isolation."] },
+  { name:"The Emotional Sponge", explanation:"You absorb others’ feelings and call it empathy.", counters:["Name what is yours vs. theirs.", "Step away to reset your system."] },
+  { name:"The Validation Chase", explanation:"You seek praise to feel stable.", counters:["Do one action you'd do unseen.", "Anchor stability in values."] },
+  { name:"The Misread Signal", explanation:"You interpret tone as threat and react fast.", counters:["Ask one clarifying question.", "Pause before assigning meaning."] },
+  { name:"The Shame Cloak", explanation:"You hide your work until it’s 'safe' to share.", counters:["Share a small draft.", "Let feedback refine, not define you."] },
+  { name:"The Shortcut Temptation", explanation:"You pick speed over integrity and pay later.", counters:["Choose the clean method.", "Take the extra minute for quality."] },
+  { name:"The Chaos Habit", explanation:"You keep life noisy so you never face direction.", counters:["Remove one source of noise.", "Sit with silence for 3 minutes."] },
+  { name:"The Loyalty Trap", explanation:"You stay loyal to people who don’t respect you.", counters:["Match energy, not history.", "Choose boundaries over nostalgia."] },
+  { name:"The Dead-End Debate", explanation:"You argue with people committed to misunderstanding you.", counters:["Exit the debate.", "Put that energy into progress."] },
+  { name:"The Identity Armor", explanation:"You cling to an old identity to avoid growth pain.", counters:["Choose one new behavior.", "Let actions update identity."] },
+  { name:"The Emotional Whiplash", explanation:"You switch between openness and shutdown.", counters:["Name your current capacity.", "Choose steady, small connection."] },
+  { name:"The Overcommit", explanation:"You say yes to too much and call it ambition.", counters:["Cut one commitment today.", "Choose completion over expansion."] },
+  { name:"The Undercommit", explanation:"You stay vague to avoid pressure and lose momentum.", counters:["Pick one deadline.", "Define the smallest deliverable."] },
+  { name:"The Trust Collapse", explanation:"One betrayal makes you close everything.", counters:["Separate one person from all people.", "Rebuild trust in small doses."] },
+  { name:"The Inner Noise", explanation:"You treat every thought like truth.", counters:["Write the thought, don’t obey it.", "Choose action over rumination."] },
+  { name:"The Borrowed Standard", explanation:"You live by rules that aren’t yours.", counters:["Ask: 'Do I believe this?'", "Choose your own metric today."] },
+  { name:"The Overexplain Reflex", explanation:"You explain until you lose authority.", counters:["Say it once, then stop.", "Let results do the talking."] },
+  { name:"The Emotional Debt", explanation:"You expect people to repay what they never agreed to.", counters:["Ask for what you want now.", "Give with clarity or not at all."] },
+  { name:"The Survival Pace", explanation:"You rush because your body thinks it’s still in danger.", counters:["Slow breathing for 60 seconds.", "Choose one calm action."] },
+  { name:"The Attention Hunger", explanation:"You chase interaction even when it drains you.", counters:["Choose one nourishing interaction.", "Limit exposure to draining spaces."] },
+  { name:"The Unseen Work", explanation:"You do big work silently, then feel invisible.", counters:["Document your work once.", "Ask for acknowledgement directly."] },
+  { name:"The Soft Sabotage", explanation:"You delay your own success by staying 'almost ready'.", counters:["Publish the imperfect version.", "Let iteration be your strategy."] },
+  { name:"The Emotional Bargain", explanation:"You trade truth for temporary closeness.", counters:["Choose truth with kindness.", "Let alignment choose your circle."] },
+  { name:"The Reactive Tongue", explanation:"You speak from heat, then regret it.", counters:["Pause one breath before speaking.", "Write it first, then decide."] },
+  { name:"The Frozen Start", explanation:"You wait for motivation and miss the window.", counters:["Do 5 minutes immediately.", "Let action create motivation."] },
+  { name:"The Endless Prep", explanation:"You prepare forever to avoid being seen.", counters:["Ship a small version today.", "Let feedback guide the next step."] },
+  { name:"The Inner Collapse", explanation:"You interpret setbacks as identity failure.", counters:["Name it as a moment, not a self.", "Choose one corrective step."] },
+  { name:"The Self-Isolation Pride", explanation:"You refuse help to prove strength.", counters:["Accept one small support.", "Strength includes receiving."] },
+  { name:"The Unspoken Need", explanation:"You expect people to guess what you need.", counters:["Ask plainly once.", "Offer a clear option."] },
+  { name:"The Emotional Overdraft", explanation:"You spend energy you don’t have, then crash.", counters:["Choose rest without guilt.", "Protect your next window."] },
+  { name:"The Low-Signal Life", explanation:"You live around noise and forget your own direction.", counters:["Write your top value today.", "Do one action that proves it."] }
+];
+  const TESTS = [
+  { name:"The Mirror Response", explanation:"When you stand in truth, other people’s insecurity can surface as criticism or distance." },
+  { name:"The Threshold Test", explanation:"As you raise standards, people test your boundaries to see if the change is real." },
+  { name:"The Manipulation Loop", explanation:"Guilt, flattery, or pressure may appear to gain access to your energy." },
+  { name:"The Saboteur Response", explanation:"Some people unconsciously pull you toward your old self to feel safer." },
+  { name:"The Temptation Trigger", explanation:"Old habits resurface as a chance to choose differently." },
+  { name:"The Identity Collision", explanation:"Your emerging self clashes with old expectations in your environment." },
+  { name:"The Energy Drainer", explanation:"You may be asked to carry emotional weight that isn’t yours because you seem stable." },
+  { name:"The Doubt Seed", explanation:"A comment plants uncertainty right before a breakthrough window." },
+  { name:"The Respect Check", explanation:"People test whether you’ll accept subtle disrespect to keep peace." },
+  { name:"The Pace Trap", explanation:"You’re tempted to move at someone else’s urgency instead of your own timing." },
+  { name:"The Silence Challenge", explanation:"You’re tested to hold your boundary without overexplaining." },
+  { name:"The Credit Test", explanation:"Your ideas may be borrowed without acknowledgement." },
+  { name:"The Proving Arena", explanation:"You’re tempted to perform instead of do the real work." },
+  { name:"The Apology Trap", explanation:"You’re nudged to apologize for having a boundary." },
+  { name:"The Closure Door", explanation:"A past situation resurfaces asking for a clean ending." },
+  { name:"The Old Friend Pull", explanation:"Nostalgia tries to override reality and standards." },
+  { name:"The Drama Invitation", explanation:"Chaos shows up asking for your attention as entertainment." },
+  { name:"The Emotional Bait", explanation:"Someone pushes your buttons to see if you’ll react." },
+  { name:"The Rescue Request", explanation:"A person asks for saving, not solutions, to keep you tied up." },
+  { name:"The Overcommit Push", explanation:"Opportunity appears, but it’s sized to drain you." },
+  { name:"The Undercommit Fog", explanation:"Vagueness tempts you to avoid pressure and lose momentum." },
+  { name:"The Small Betrayal", explanation:"A minor boundary violation tests whether you’ll address it or swallow it." },
+  { name:"The Respect Delay", explanation:"People slow down when you require clarity and standards." },
+  { name:"The Triggered Memory", explanation:"A present moment echoes an old wound and asks for a new response." },
+  { name:"The Lonely Choice", explanation:"Alignment requires choosing truth even if it feels isolating." },
+  { name:"The Attention Tax", explanation:"Low-value interactions demand your time right when you need focus." },
+  { name:"The Reputation Storm", explanation:"Someone misunderstands you and the test is composure." },
+  { name:"The Misread Tone", explanation:"A neutral comment feels sharp; the test is verification before meaning." },
+  { name:"The Power Comparison", explanation:"Someone competes with you instead of collaborating." },
+  { name:"The Boundary Negotiation", explanation:"Someone tries to bargain with your no." },
+  { name:"The Timing Discipline", explanation:"You’re tested to wait for clarity instead of rushing." },
+  { name:"The Comfort Seduction", explanation:"Comfort invites you to delay the work that changes your life." },
+  { name:"The Consistency Trial", explanation:"The test is whether you keep the routine when motivation dips." },
+  { name:"The Focus Gate", explanation:"You’re tested to protect a single priority from distractions." },
+  { name:"The Peace vs Truth", explanation:"A moment asks if you’ll choose harmony or honesty." },
+  { name:"The Quiet Win", explanation:"The win is subtle; the test is patience with invisible progress." },
+  { name:"The Shortcut Offer", explanation:"You’re tempted to choose speed over integrity." },
+  { name:"The Authority Test", explanation:"You’re asked to lead without becoming harsh." },
+  { name:"The Receiving Test", explanation:"Help arrives; the test is allowing support without guilt." },
+  { name:"The Trust Rebuild", explanation:"A situation asks you to trust in small doses, not all-or-nothing." },
+  { name:"The Emotional Labor Ask", explanation:"Someone wants free therapy from you because you seem steady." },
+  { name:"The Accountability Mirror", explanation:"A moment asks you to own your part without shame." },
+  { name:"The Conflict Door", explanation:"A boundary requires calm confrontation, not avoidance." },
+  { name:"The Reputation Projection", explanation:"Someone projects a story onto you; the test is not adopting it." },
+  { name:"The Patience Drill", explanation:"Things move slower than you want; the test is consistency." },
+  { name:"The Standards Check", explanation:"Your environment asks if you really mean your new standards." },
+  { name:"The Feedback Storm", explanation:"Critique arrives; the test is extracting signal, ignoring noise." },
+  { name:"The Emotional Regulation", explanation:"A trigger appears; the test is responding, not reacting." },
+  { name:"The Values Choice", explanation:"A decision asks you to choose values over convenience." },
+  { name:"The Distraction Blitz", explanation:"Noise increases right before a meaningful step." },
+  { name:"The Boundary Proof", explanation:"You’re tested to hold a limit even when misunderstood." },
+  { name:"The Old Habit Offer", explanation:"The past returns with familiar comfort that costs you later." },
+  { name:"The Hidden Opportunity", explanation:"A door appears quietly; the test is noticing it." },
+  { name:"The Pressure Upgrade", explanation:"Responsibility increases; the test is structure and pacing." },
+  { name:"The Emotional Honesty", explanation:"You’re tested to name your feeling without making it a weapon." },
+  { name:"The Respect Demand", explanation:"You’re tested to require respect without drama." },
+  { name:"The Clarity Request", explanation:"Someone asks vague things; the test is asking clear questions." },
+  { name:"The Completion Gate", explanation:"Finishing is the test, not starting." },
+  { name:"The Identity Upgrade", explanation:"A moment asks you to act like your future self." },
+  { name:"The Standards Friction", explanation:"Your growth causes friction; the test is calm consistency." },
+  { name:"The Overexplain Trap", explanation:"You want to justify; the test is silence and results." },
+  { name:"The Emotional Detach", explanation:"You’re tested to care without absorbing." },
+  { name:"The Power Calm", explanation:"You’re tested to hold authority without intensity." },
+  { name:"The Social Filter", explanation:"You’re tested to choose who gets access to your energy." },
+  { name:"The Timing Patience", explanation:"You’re tested to wait one window before deciding." },
+  { name:"The Self-Trust", explanation:"A decision asks you to trust your signal over opinions." },
+  { name:"The Small Boundary", explanation:"A tiny limit matters; the test is honoring it." },
+  { name:"The Quiet Discipline", explanation:"No one is watching; the test is doing it anyway." }
+];
+  const EMOTIONS_27 = [
+  { name:"Calmness", showsUp:"Breath feels steady; you’re less reactive and more observant.", bestResponse:"Keep the pace slow and finish one meaningful task." },
+  { name:"Anxiety", showsUp:"Future thoughts race; your body feels tight or alert.", bestResponse:"Name 3 facts, breathe slowly, and take one small controlled step." },
+  { name:"Grounded Focus", showsUp:"Your attention locks in without strain.", bestResponse:"Choose one priority and protect it from interruptions." },
+  { name:"Restless Energy", showsUp:"You want movement, novelty, or quick results.", bestResponse:"Move your body for 10 minutes, then choose one clean action." },
+  { name:"Curiosity", showsUp:"You feel pulled to learn, explore, ask questions.", bestResponse:"Follow one thread only—don’t scatter into five." },
+  { name:"Quiet Sadness", showsUp:"Low volume heaviness; you feel tender and reflective.", bestResponse:"Let it exist without explanation; do one gentle stabilizing ritual." },
+  { name:"Nostalgia", showsUp:"Memories feel loud; you romanticize or replay the past.", bestResponse:"Take the lesson, not the longing—do one present-day action." },
+  { name:"Determination", showsUp:"A clean “I’m doing this” feeling appears.", bestResponse:"Pick the smallest finishable goal and complete it." },
+  { name:"Overwhelm", showsUp:"Too many inputs; your brain feels crowded.", bestResponse:"Reduce tasks to 1–3 items and remove extra noise." },
+  { name:"Relief", showsUp:"Your body loosens; pressure drops.", bestResponse:"Lock in what worked so you don’t recreate the stress." },
+  { name:"Protectiveness", showsUp:"You feel territorial about your peace or people.", bestResponse:"Set one boundary calmly—no threats, no speeches." },
+  { name:"Vulnerability", showsUp:"You feel open, exposed, or easily affected.", bestResponse:"Share only with safe people; keep your actions steady." },
+  { name:"Irritation", showsUp:"Small things feel disrespectful or annoying.", bestResponse:"Pause before speaking; choose directness without heat." },
+  { name:"Gratitude", showsUp:"You notice what’s working and feel supported.", bestResponse:"Express it once and keep building—gratitude + action compounds." },
+  { name:"Resentment", showsUp:"You feel owed; giving feels heavy.", bestResponse:"Stop over-giving; ask clearly or step back cleanly." },
+  { name:"Hopefulness", showsUp:"You can see a path forward again.", bestResponse:"Take one concrete step to make the hope real." },
+  { name:"Disappointment", showsUp:"Expectation breaks; energy dips.", bestResponse:"Name what’s true, then choose one corrective move." },
+  { name:"Cautious Optimism", showsUp:"You believe, but you’re watching for red flags.", bestResponse:"Move forward slowly with clear boundaries and checkpoints." },
+  { name:"Emotional Tiredness", showsUp:"You’re done processing; even talking feels heavy.", bestResponse:"Rest first—don’t interpret people or make big decisions." },
+  { name:"Excitement", showsUp:"Energy spikes; you want to share or start fast.", bestResponse:"Channel it into one deliverable before telling everyone." },
+  { name:"Confusion", showsUp:"Nothing feels clear; you second-guess basics.", bestResponse:"Ask one clarifying question and simplify your next step." },
+  { name:"Clarity", showsUp:"You see the truth cleanly, without drama.", bestResponse:"Act while clarity is here—one decisive step." },
+  { name:"Loneliness", showsUp:"You feel unseen; connection feels far away.", bestResponse:"Choose one safe connection or one self-support ritual—don’t chase." },
+  { name:"Sense of Purpose", showsUp:"You feel aligned; your actions feel meaningful.", bestResponse:"Protect your focus and avoid arguments that dilute the mission." },
+  { name:"Emotional Numbness", showsUp:"You feel muted; you can’t access much feeling.", bestResponse:"Do gentle body-based grounding; avoid forcing emotions." },
+  { name:"Empathic Pain", showsUp:"Other people’s emotions feel like yours.", bestResponse:"Separate ‘mine vs. theirs’ and reduce exposure for one window." },
+  { name:"Awe", showsUp:"You feel humbled; the world feels larger than your stress.", bestResponse:"Write one sentence of insight and let it guide your day." }
+];
 
-      const birthInput = document.getElementById("birthdate").value;
-      const mode = document.getElementById("mode").value;
-      const msg = document.getElementById("placeholderMsg");
+  // Support kit (minimal base; keep yours or expand later)
+  const CRYSTALS_BY_ZODIAC = {
+  Aries: [
+    "Carnelian","Red Jasper","Hematite","Bloodstone","Garnet","Tiger’s Eye","Citrine","Sunstone",
+    "Black Tourmaline","Smoky Quartz","Clear Quartz","Pyrite","Obsidian","Quartz Geode",
+    "Golden Calcite","Fire Agate","Orange Calcite","Ruby (if available)","Labradorite","Sodalite",
+    "Kyanite","Howlite","Unakite","Bronzite","Malachite"
+  ],
+  Taurus: [
+    "Rose Quartz","Green Aventurine","Malachite","Jade","Smoky Quartz","Black Tourmaline","Amazonite",
+    "Rhodonite","Fluorite","Clear Quartz","Hematite","Pyrite","Citrine","Lapis Lazuli","Amethyst",
+    "Sodalite","Tiger’s Eye","Moonstone","Obsidian","Unakite","Moss Agate","Tree Agate","Kyanite",
+    "Calcite (green)","Garnet"
+  ],
+  Gemini: [
+    "Citrine","Amethyst","Fluorite","Clear Quartz","Sodalite","Lapis Lazuli","Aquamarine","Blue Lace Agate",
+    "Tiger’s Eye","Hematite","Smoky Quartz","Black Tourmaline","Labradorite","Moonstone","Kyanite","Celestite",
+    "Howlite","Rose Quartz","Amazonite","Malachite","Pyrite","Sunstone","Obsidian","Chrysoprase","Calcite (blue)"
+  ],
+  Cancer: [
+    "Moonstone","Rose Quartz","Selenite","Amethyst","Aquamarine","Labradorite","Clear Quartz","Smoky Quartz",
+    "Black Tourmaline","Howlite","Blue Lace Agate","Celestite","Rhodonite","Unakite","Jade","Malachite",
+    "Fluorite","Sodalite","Lapis Lazuli","Obsidian","Hematite","Chrysocolla","Calcite (white)","Pearl (if available)",
+    "Angelite"
+  ],
+  Leo: [
+    "Sunstone","Citrine","Tiger’s Eye","Carnelian","Pyrite","Amber","Clear Quartz","Garnet",
+    "Labradorite","Smoky Quartz","Hematite","Goldstone","Orange Calcite","Fire Agate","Red Jasper",
+    "Ruby (if available)","Topaz (if available)","Obsidian","Black Tourmaline","Malachite","Sodalite",
+    "Lapis Lazuli","Fluorite","Bronzite","Golden Calcite"
+  ],
+  Virgo: [
+    "Amazonite","Fluorite","Smoky Quartz","Black Tourmaline","Amethyst","Clear Quartz","Sodalite","Howlite",
+    "Citrine","Green Aventurine","Moss Agate","Tree Agate","Unakite","Hematite","Pyrite","Labradorite",
+    "Blue Lace Agate","Kyanite","Jade","Malachite","Rose Quartz","Obsidian","Calcite (green)","Chrysoprase",
+    "Carnelian"
+  ],
+  Libra: [
+    "Rose Quartz","Rhodonite","Green Aventurine","Jade","Amazonite","Fluorite","Lapis Lazuli","Sodalite",
+    "Clear Quartz","Amethyst","Moonstone","Labradorite","Howlite","Celestite","Aquamarine","Smoky Quartz",
+    "Black Tourmaline","Pyrite","Citrine","Malachite","Unakite","Blue Lace Agate","Obsidian","Calcite (pink)",
+    "Chrysocolla"
+  ],
+  Scorpio: [
+    "Obsidian","Black Tourmaline","Smoky Quartz","Hematite","Labradorite","Garnet","Malachite","Amethyst",
+    "Clear Quartz","Bloodstone","Red Jasper","Tiger’s Eye","Pyrite","Sodalite","Lapis Lazuli","Fluorite",
+    "Moonstone","Rhodonite","Unakite","Carnelian","Kyanite","Chrysocolla","Onyx (if available)","Calcite (black)",
+    "Azurite"
+  ],
+  Sagittarius: [
+    "Amethyst","Citrine","Lapis Lazuli","Sodalite","Tiger’s Eye","Clear Quartz","Smoky Quartz","Black Tourmaline",
+    "Sunstone","Carnelian","Pyrite","Labradorite","Fluorite","Kyanite","Blue Lace Agate","Howlite",
+    "Obsidian","Hematite","Garnet","Malachite","Amazonite","Moonstone","Calcite (orange)","Chrysoprase",
+    "Celestite"
+  ],
+  Capricorn: [
+    "Smoky Quartz","Black Tourmaline","Hematite","Obsidian","Pyrite","Clear Quartz","Tiger’s Eye","Garnet",
+    "Amethyst","Fluorite","Sodalite","Lapis Lazuli","Malachite","Jade","Green Aventurine","Moss Agate",
+    "Unakite","Howlite","Kyanite","Labradorite","Moonstone","Bronzite","Calcite (grey)","Bloodstone",
+    "Red Jasper"
+  ],
+  Aquarius: [
+    "Amethyst","Labradorite","Fluorite","Sodalite","Lapis Lazuli","Aquamarine","Clear Quartz","Moonstone",
+    "Celestite","Kyanite","Howlite","Smoky Quartz","Black Tourmaline","Obsidian","Hematite","Pyrite",
+    "Amazonite","Chrysocolla","Malachite","Blue Lace Agate","Rose Quartz","Citrine","Calcite (blue)","Unakite",
+    "Angelite"
+  ],
+  Pisces: [
+    "Amethyst","Aquamarine","Moonstone","Labradorite","Rose Quartz","Selenite","Clear Quartz","Fluorite",
+    "Celestite","Howlite","Blue Lace Agate","Smoky Quartz","Black Tourmaline","Obsidian","Hematite","Rhodonite",
+    "Unakite","Jade","Malachite","Sodalite","Lapis Lazuli","Kyanite","Calcite (white)","Chrysoprase",
+    "Angelite"
+  ]
+};
+  const CRYSTAL_SET_NOTES = {
+    Fire: "Supports confident action with clean pacing — momentum without burnout.",
+    Earth:"Supports grounding and steadiness under load.",
+    Air:"Supports clarity and focused communication.",
+    Water:"Supports emotional processing and gentle release."
+  };
+  const SCENT_PACKS = {
+  Fire: [
+    { primary:"Bergamot incense", note:"Bright energy with control; reduces impulsive heat." },
+    { primary:"Orange + cinnamon candle", note:"Confidence and warmth without chaos." },
+    { primary:"Ginger incense", note:"Motivation with grounded edge—use lightly." },
+    { primary:"Lemongrass oil (diffuse)", note:"Clears agitation and sharpens focus." },
+    { primary:"Frankincense incense", note:"Turns intensity into calm authority." },
+    { primary:"Citrus peel simmer (orange/lemon)", note:"Refreshes atmosphere; supports clean momentum." }
+  ],
+  Earth: [
+    { primary:"Sandalwood incense", note:"Grounding and steady—good for overwhelm." },
+    { primary:"Cedar candle", note:"Stability, protection, and calm structure." },
+    { primary:"Vetiver oil (diffuse)", note:"Deep grounding; reduces mental scatter." },
+    { primary:"Patchouli incense", note:"Anchors the room; supports patience." },
+    { primary:"Pine/forest candle", note:"Clears heaviness and restores steadiness." },
+    { primary:"Clove + cedar simmer", note:"Warms and stabilizes the environment." }
+  ],
+  Air: [
+    { primary:"Rosemary incense", note:"Clears fog and supports sharp decisions." },
+    { primary:"Peppermint oil (diffuse)", note:"Mental clarity—use lightly if sensitive." },
+    { primary:"Eucalyptus candle", note:"Refreshes the room; reduces stale thinking." },
+    { primary:"Lavender + mint incense", note:"Calm focus without drowsiness." },
+    { primary:"Lemon balm candle", note:"Gentle clarity and calmer speech." },
+    { primary:"Sage + citrus blend", note:"Clears noise and resets attention." }
+  ],
+  Water: [
+    { primary:"Lavender incense", note:"Soothes emotional spikes; supports rest." },
+    { primary:"Jasmine candle", note:"Softens the room; supports self-compassion." },
+    { primary:"Frankincense + myrrh incense", note:"Deep calm; reduces emotional looping." },
+    { primary:"Rose oil (diffuse)", note:"Heart soothing; supports gentle boundaries." },
+    { primary:"Chamomile candle", note:"Comfort and quiet—good for late windows." },
+    { primary:"Vanilla + lavender blend", note:"Safety tone for nervous system reset." }
+  ]
+};
+  const MICRO_ACTIONS = {
+  Fire: [
+    { action:"10–15 minute walk with no phone.", note:"Movement clears urgency and restores pacing." },
+    { action:"One 12-minute task sprint, then stop.", note:"Clean momentum beats burnout." },
+    { action:"Cold water on wrists for 30 seconds.", note:"Interrupts heat and resets tone." },
+    { action:"Write one decisive sentence: 'Today I will…'", note:"Directs intensity into clarity." },
+    { action:"Do one physical reset: tidy a surface.", note:"Order outside calms the inside." },
+    { action:"Two minutes of slow breathing before responding.", note:"Prevents reactive speech." },
+    { action:"Stand, stretch, and relax jaw + shoulders.", note:"Releases stored pressure." },
+    { action:"Finish one small task completely.", note:"Completion stabilizes fire energy." },
+    { action:"Move your body, then decide.", note:"Fire thinks clearer after movement." }
+  ],
+  Earth: [
+    { action:"Organize one small physical space.", note:"Stability outside supports stability inside." },
+    { action:"Make a simple checklist with 3 items.", note:"Structure reduces overwhelm." },
+    { action:"Take five slow breaths and name 3 facts.", note:"Facts anchor you in reality." },
+    { action:"Clean your phone screen + workspace.", note:"Tiny order creates clarity." },
+    { action:"Do one repeatable habit for 10 minutes.", note:"Consistency restores confidence." },
+    { action:"Drink water and sit still for 60 seconds.", note:"Grounding improves decisions." },
+    { action:"Pick tomorrow’s first task now.", note:"Planning reduces mental load." },
+    { action:"Choose one boundary and keep it.", note:"Earth energy strengthens through limits." },
+    { action:"Walk slowly for 8 minutes.", note:"Slow motion resets nervous system." }
+  ],
+  Air: [
+    { action:"Write the 3 loudest thoughts down.", note:"Paper drains mental noise." },
+    { action:"Delete one distraction app notification.", note:"Less input, more clarity." },
+    { action:"One 10-minute single-task focus block.", note:"Focus restores confidence." },
+    { action:"Speak one truth out loud to yourself.", note:"Voice makes clarity real." },
+    { action:"Close extra tabs (literal or mental): pick one goal.", note:"Direction reduces scatter." },
+    { action:"Ask one clarifying question instead of assuming.", note:"Verification prevents spirals." },
+    { action:"4-7-8 breathing once.", note:"Slows racing mind." },
+    { action:"Write one decision you’re postponing.", note:"Naming it reduces fog." },
+    { action:"Read something calming for 5 minutes.", note:"Replace noise with signal." }
+  ],
+  Water: [
+    { action:"Name your main feeling in one sentence.", note:"Naming reduces intensity." },
+    { action:"Hand on chest, slow breathing for 2 minutes.", note:"Soothes emotional spikes." },
+    { action:"Write a 5-line emotional dump, then stop.", note:"Contain feelings without spiraling." },
+    { action:"Take a warm shower or wash hands slowly.", note:"Water resets water energy." },
+    { action:"Play one calming track for 3 minutes.", note:"Regulation before interpretation." },
+    { action:"Step outside for fresh air, no phone.", note:"Space helps feelings move through." },
+    { action:"Choose one gentle boundary today.", note:"Softness needs protection." },
+    { action:"Text one safe person a simple hello.", note:"Connection without overexposing." },
+    { action:"Do one small comfort ritual (tea/candle).", note:"Stability calms emotional tides." }
+  ]
+};
+ const CLEANSING_HERBS_ENV = [
+  { herb:"Rosemary", bestUse:"Simmer pot or smoke cleanse", vibe:"Clears heaviness; sharpens the room’s signal." },
+  { herb:"Garden Sage", bestUse:"Smoke cleanse or simmer pot", vibe:"Classic reset after conflict or visitors." },
+  { herb:"Bay Leaf", bestUse:"Simmer pot or written intention + discard", vibe:"Boundary tone; fresh-start atmosphere." },
+  { herb:"Lavender", bestUse:"Sachet or simmer pot", vibe:"Soft calm; smooths agitation in the space." },
+  { herb:"Thyme", bestUse:"Simmer pot", vibe:"Steady protection vibe; clean-house feeling." },
+  { herb:"Basil", bestUse:"Simmer pot or strained floor wash", vibe:"Light, welcoming, uplifting energy." },
+  { herb:"Mint", bestUse:"Simmer pot", vibe:"Fast refresh; clears stale vibes." },
+  { herb:"Eucalyptus Leaves", bestUse:"Simmer pot", vibe:"Crisp reset; clears the air tone." },
+  { herb:"Lemon Balm", bestUse:"Simmer pot", vibe:"Gentle peace; emotionally safer atmosphere." },
+  { herb:"Chamomile", bestUse:"Sachet or simmer pot", vibe:"Comfort + quiet; good for night wind-down." },
+  { herb:"Cinnamon Stick", bestUse:"Simmer pot", vibe:"Warmth + confidence; energizes without chaos." },
+  { herb:"Clove", bestUse:"Simmer pot", vibe:"Deep reset tone; protected-home feeling." },
+  { herb:"Star Anise", bestUse:"Simmer pot", vibe:"Mystic sweet-clearing; ritual mood." },
+  { herb:"Dried Orange Peel", bestUse:"Simmer pot", vibe:"Bright lift; mood reset." },
+  { herb:"Dried Lemon Peel", bestUse:"Simmer pot", vibe:"Clean refresh; cuts heaviness." },
+  { herb:"Juniper (berries/branch)", bestUse:"Ventilated smoke cleanse or simmer pot", vibe:"Strong clearing; no-nonsense boundary tone." },
+  { herb:"Cedar (chips/needles)", bestUse:"Ventilated smoke cleanse or simmer pot", vibe:"Grounding protection; stable house energy." },
+  { herb:"Pine Needles", bestUse:"Simmer pot", vibe:"Fresh-start field; clears residue." },
+  { herb:"Frankincense Resin", bestUse:"Charcoal burner", vibe:"Sacred calm; deep cleanse atmosphere." },
+  { herb:"Myrrh Resin", bestUse:"Charcoal burner", vibe:"Heavy-duty reset; temple mood." },
+  { herb:"Copal Resin", bestUse:"Charcoal burner", vibe:"Bright spiritual cleanse; uplifting clean tone." },
+  { herb:"Palo Santo (wood)", bestUse:"Smoke cleanse (sparingly)", vibe:"Gentle sweet reset; good after guests." },
+  { herb:"Rue (traditional use)", bestUse:"Sachet near doorway", vibe:"Strong boundary herb; use respectfully." },
+  { herb:"Hibiscus", bestUse:"Sachet or simmer pot", vibe:"Heart-softening atmosphere; sweet calm." }
+];
 
-      if (!birthInput) {
-        alert("Please enter a valid birthdate.");
-        return;
-      }
+  function getExposurePattern(center, element){
+    if(center.startsWith("Heart")) return "Because you feel deeply, some people may lean on your empathy without giving the same care back. Support without self-erasing.";
+    if(center.startsWith("Body")) return "Because you carry weight well, others may expect you to always handle it. Notice when responsibility stops being shared.";
+    if(center.startsWith("Head")) return "Because you see patterns, people may come for answers but ignore your limits. Stop over-explaining when you feel drained.";
+    if(center.startsWith("Integrated")) return "Because you read rooms on multiple levels, some may treat you like emotional infrastructure. Remember: you’re a person, not a system.";
+    if(element==="Fire") return "Your intensity can become free fuel for others. Protect your energy from being used.";
+    return "Protect your attention and access. That’s where your power is.";
+  }
 
-      const birthDateObj = new Date(birthInput + "T12:00:00");
-      if (isNaN(birthDateObj.getTime())) {
-        alert("Please enter a valid birthdate.");
-        return;
-      }
+  document.getElementById("reportForm").addEventListener("submit", function(e){
+    e.preventDefault();
 
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
-      const hashSeed = hashString(birthInput + "|" + mode + "|" + todayStr);
+    const birthInput=document.getElementById("birthdate").value;
+    const mode=document.getElementById("mode").value;
+    const msg=document.getElementById("placeholderMsg");
+    if(!birthInput){ alert("Please enter a valid birthdate."); return; }
 
-      const lifePath = getLifePath(birthInput);
-      const month = birthDateObj.getMonth() + 1;
-      const day = birthDateObj.getDate();
-      const sign = getZodiac(month, day);
-      const element = getElement(sign);
-      const center = getCenterType(lifePath);
-      const destinyArchetype = getDestinyArchetype(lifePath);
-      const elementDesc = getElementDescription(element);
-      const coreDrive = getCoreDrive(lifePath);
-      const moonPhase = getMoonPhaseName(today);
-      const windowLabel = getTimeWindow(mode);
+    const birthDateObj=new Date(birthInput+"T12:00:00");
+    if(isNaN(birthDateObj.getTime())){ alert("Please enter a valid birthdate."); return; }
 
-      const dateDisplay = today.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+    const today=new Date();
+    const dIndex=dayIndexUTC(today);
+    const seed=hashString(birthInput+"|"+mode+"|"+dIndex);
 
-      const conditions = getConditions(lifePath, element, mode);
+    const lifePath=getLifePath(birthInput);
+    const sign=getZodiac(birthDateObj.getMonth()+1, birthDateObj.getDate());
+    const element=getElement(sign);
+    const center=getCenterType(lifePath);
 
-      const shadow = pickDeterministic(SHADOWS, hashSeed, 3);
-      const test = pickDeterministic(TESTS, hashSeed, 7);
-      const emotion = pickDeterministic(EMOTIONS, hashSeed, 11);
+    const driveCode=driveCodeFromLifePath(lifePath);
+    const driveWeather=DRIVE_LABELS[driveCode] || ("Drive-"+driveCode);
 
-      const support = getSupport(element);
-      const exposureLine = getExposurePattern(center, element);
+    const destinyPhrase = pick((DESTINY_PHRASES[lifePath] || ["Adaptive blueprint."]), seed, 2);
+    const elementPhrase = pick((ELEMENT_PHRASES[element] || ["Balanced temperament."]), seed, 3);
+    const centerPhrase  = pick((CENTER_PHRASES[center] || [center]), seed, 4);
+    const drivePhrase   = pick((CORE_DRIVE_PHRASES[driveCode] || ["Balanced drive."]), seed, 6);
 
-      // Fill header
-      document.getElementById("reportTitle").textContent =
-        mode.charAt(0).toUpperCase() + mode.slice(1) + " Briefing";
-      document.getElementById("reportDate").textContent = dateDisplay;
-      document.getElementById("reportWindow").textContent = windowLabel;
-      document.getElementById("moonPhase").textContent = moonPhase;
-      document.getElementById("destinyNumberMeta").textContent = lifePath;
-      document.getElementById("elementLabel").textContent = element + " element";
-      document.getElementById("zodiacSign").textContent = sign;
+    const blueprint = pick(BLUEPRINT_TEMPLATES, seed, 9)
+      .replace("{destiny}", destinyPhrase.toLowerCase())
+      .replace("{element}", elementPhrase.toLowerCase())
+      .replace("{center}", centerPhrase.toLowerCase());
 
-      // Core field
-      document.getElementById("destinyArchetype").textContent = destinyArchetype;
-      document.getElementById("elementDescription").textContent = elementDesc;
-      document.getElementById("centerType").textContent = center;
-      document.getElementById("coreDrive").textContent = coreDrive;
+    const calibration = pick(CALIBRATION_TEMPLATES, seed, 12);
 
-      document.getElementById("coreBlueprintSummary").textContent =
-        "Your core field reads as a Chosen One whose life path number " +
-        lifePath +
-        " combines with a " +
-        element.toLowerCase() +
-        " temperament in the sign of " +
-        sign +
-        ". This shapes how you handle pressure, opportunity, and emotional intensity.";
+    const cond = buildConditions(seed, mode, driveWeather);
 
-      document.getElementById("coreStrengthsWeaknesses").textContent =
-        "Your strengths live where your natural instincts and your values overlap. Your growth edge lives where you feel pulled to abandon yourself to keep the peace, stay comfortable, or avoid being seen.";
+    const shadow = pick(SHADOWS, seed, 14);
+    const test   = pick(TESTS, seed, 16);
+    const emotion= pick(EMOTIONS, seed, 18);
+    const exposure = getExposurePattern(center, element);
 
-      // Conditions
-      document.getElementById("conditionsOverview").textContent =
-        conditions.overview;
-      document.getElementById("cond1").textContent = conditions.cond1;
-      document.getElementById("cond2").textContent = conditions.cond2;
-      document.getElementById("cond3").textContent = conditions.cond3;
+    const moonPhase=getMoonPhaseName(today);
+    const windowLabel=getTimeWindow(mode);
+    const dateDisplay=today.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
 
-      // Shadow & Test
-      document.getElementById("shadowName").textContent = shadow.name;
-      document.getElementById("emotionName").textContent = emotion;
-      document.getElementById("shadowExplanation").textContent =
-        shadow.explanation;
-      document.getElementById("testName").textContent = test.name;
-      document.getElementById("testExplanation").textContent =
-        test.explanation;
-      document.getElementById("exposurePattern").textContent = exposureLine;
-      document.getElementById("counter1").textContent = shadow.counters[0];
-      document.getElementById("counter2").textContent = shadow.counters[1];
+    // Support
+    const crystalPool = (CRYSTALS_BY_ZODIAC[sign] || ["Clear Quartz","Smoky Quartz","Amethyst"]);
+    const crystals = pickUnique(crystalPool, seed, 3, 7).join(" • ");
+    const crystalsNote = CRYSTAL_SET_NOTES[element] || "Use these as anchors for attention and pacing.";
 
-      // Support kit
-      document.getElementById("supportIntro").textContent =
-        "Support tools are not magic. They help your nervous system match the decisions you are trying to make. Use them as anchors, not as shortcuts.";
+    const scentPack = pick((SCENT_PACKS[element] || [{primary:"Sandalwood incense", note:"Grounding. If unavailable: cedar candle."}]), seed, 20);
+    const actionPack = pick((MICRO_ACTIONS[element] || [{action:"One 12-minute focus block.", note:"Protect attention and finish one thing."}]), seed, 22);
+    const herb = pick(CLEANSING_HERBS_ENV, seed, 24);
 
-      document.getElementById("crystalPrimary").textContent =
-        support.crystal.crystal;
-      document.getElementById("crystalNote").textContent =
-        support.crystal.note;
+    // Fill UI
+    document.getElementById("reportTitle").textContent = mode.charAt(0).toUpperCase()+mode.slice(1)+" Briefing";
+    document.getElementById("reportDate").textContent = dateDisplay;
+    document.getElementById("reportWindow").textContent = windowLabel;
+    document.getElementById("moonPhase").textContent = moonPhase;
+    document.getElementById("zodiacSign").textContent = sign;
+    document.getElementById("lifePathMeta").textContent = lifePath;
+    document.getElementById("elementLabel").textContent = element+" element";
 
-      document.getElementById("scentPrimary").textContent =
-        support.scent.scent;
-      document.getElementById("scentNote").textContent = support.scent.note;
+    document.getElementById("destinyOut").textContent = destinyPhrase;
+    document.getElementById("elementOut").textContent = elementPhrase;
+    document.getElementById("centerOut").textContent  = centerPhrase;
+    document.getElementById("driveOut").textContent   = drivePhrase;
 
-      document.getElementById("actionPrimary").textContent =
-        support.action.action;
-      document.getElementById("actionNote").textContent =
-        support.action.note;
+    document.getElementById("blueprintOut").textContent = blueprint;
+    document.getElementById("calibrationOut").textContent = calibration;
 
-      // Show report
-      document.getElementById("reportCard").style.display = "block";
-      msg.textContent =
-        "Report generated. You can scroll, screenshot, or read it aloud.";
-    });
-  </script>
+    document.getElementById("conditionsOverviewOut").textContent = cond.overview;
+    document.getElementById("cond1Out").textContent = cond.c1;
+    document.getElementById("cond2Out").textContent = cond.c2;
+    document.getElementById("cond3Out").textContent = cond.c3;
+
+    document.getElementById("shadowNameOut").textContent = shadow.name;
+    document.getElementById("testNameOut").textContent = test.name;
+    document.getElementById("emotionOut").textContent = emotion;
+    document.getElementById("shadowExplainOut").textContent = shadow.explanation;
+    document.getElementById("testExplainOut").textContent = test.explanation;
+    document.getElementById("exposureOut").textContent = exposure;
+    document.getElementById("counter1Out").textContent = shadow.counters[0];
+    document.getElementById("counter2Out").textContent = shadow.counters[1];
+
+    document.getElementById("supportIntroOut").textContent =
+      "Support tools are anchors for attention and regulation. Use them to match your choices with your nervous system.";
+    document.getElementById("crystalsOut").textContent = crystals;
+    document.getElementById("crystalsNoteOut").textContent = crystalsNote;
+    document.getElementById("scentOut").textContent = scentPack.primary;
+    document.getElementById("scentNoteOut").textContent = scentPack.note;
+    document.getElementById("actionOut").textContent = actionPack.action;
+    document.getElementById("actionNoteOut").textContent = actionPack.note;
+    document.getElementById("herbOut").textContent = herb;
+
+    document.getElementById("reportCard").style.display="block";
+    msg.textContent="Report generated. Scroll, screenshot, or read it aloud.";
+  });
+</script>
 </body>
 </html>
