@@ -3,7 +3,7 @@
 <head>
   <meta name="google-site-verification" content="Vbsgzad0o8PMx_M1E8RsFqAFN87c3A_nXuQNuTPh-mA" />
   <meta charset="UTF-8" />
-  <meta name="viewport"content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chosen One Condition Report</title>
   <style>
     :root {
@@ -18,19 +18,16 @@
       --shadow-strong: 0 24px 60px rgba(15, 23, 42, 0.95);
       --radius-lg: 20px;
       --radius-xl: 28px;
+      --success: #34d399;
+      --warn: #fbbf24;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
       background: var(--bg-gradient);
       color: var(--text-main);
       display: flex;
@@ -39,19 +36,14 @@
       padding: 16px;
     }
 
-    .app-shell {
-      width: 100%;
-      max-width: 780px;
-      margin: 0 auto;
-    }
+    .app-shell { width: 100%; max-width: 780px; margin: 0 auto; }
 
     /* INPUT PANEL */
-
     .input-card {
       background: rgba(15, 23, 42, 0.86);
       border-radius: var(--radius-xl);
       border: 1px solid rgba(148, 163, 184, 0.4);
-      padding: 14px 14px 14px;
+      padding: 14px;
       box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
       margin-bottom: 12px;
       position: relative;
@@ -62,19 +54,12 @@
       content: "";
       position: absolute;
       inset: -40%;
-      background: radial-gradient(
-        circle at top left,
-        rgba(56, 189, 248, 0.18),
-        transparent 60%
-      );
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 60%);
       opacity: 0.9;
       pointer-events: none;
     }
 
-    .input-inner {
-      position: relative;
-      z-index: 1;
-    }
+    .input-inner { position: relative; z-index: 1; }
 
     .input-title {
       font-size: 0.95rem;
@@ -82,33 +67,34 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-strong);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .input-sub {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--text-soft);
       margin-bottom: 10px;
+      line-height: 1.4;
     }
 
-    .input-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    .tool-disclaimer {
+      margin-top: 8px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.65);
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      line-height: 1.45;
     }
 
-    @media (min-width: 640px) {
-      .input-row {
-        flex-direction: row;
-      }
-    }
+    .tool-disclaimer strong { color: var(--text-strong); font-weight: 600; }
+    .tool-disclaimer .dot { color: var(--accent); margin: 0 6px; }
 
-    .field {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .input-row { display: flex; flex-direction: column; gap: 8px; }
+    @media (min-width: 640px) { .input-row { flex-direction: row; } }
+
+    .field { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 
     .field label {
       font-size: 0.75rem;
@@ -117,8 +103,7 @@
       color: var(--accent);
     }
 
-    .field input,
-    .field select {
+    .field input, .field select {
       background: rgba(15, 23, 42, 0.92);
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.6);
@@ -128,8 +113,7 @@
       outline: none;
     }
 
-    .field input:focus,
-    .field select:focus {
+    .field input:focus, .field select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
     }
@@ -138,30 +122,120 @@
       margin-top: 10px;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .btn-generate {
       border-radius: 999px;
       border: 1px solid rgba(56, 189, 248, 0.7);
-      background: linear-gradient(
-        135deg,
-        rgba(56, 189, 248, 0.16),
-        rgba(56, 189, 248, 0.35)
-      );
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.16), rgba(56, 189, 248, 0.35));
       padding: 7px 18px;
       font-size: 0.86rem;
       color: #ecfeff;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      cursor: pointer;
     }
 
-    .btn-generate span.icon {
-      font-size: 0.95rem;
+    .btn-generate span.icon { font-size: 0.95rem; }
+
+    .placeholder-message {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-top: 6px;
+    }
+
+    /* WEBMASTER ERIC CTA BAR */
+    .cta-bar {
+      margin-top: 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.10), rgba(15, 23, 42, 0.88));
+      padding: 10px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cta-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .cta-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.10);
+      color: var(--text-main);
+      font-size: 0.78rem;
+    }
+
+    .cta-copy {
+      font-size: 0.84rem;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-link {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.84rem;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.75);
+      color: var(--text-strong);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-link.primary {
+      border: 1px solid rgba(52, 211, 153, 0.6);
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.10), rgba(52, 211, 153, 0.20));
+      color: #ecfeff;
+    }
+
+    .btn-link:hover { filter: brightness(1.08); }
+
+    .cta-fineprint {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      line-height: 1.35;
+    }
+
+    .cta-fineprint code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.76rem;
+      color: #c7d2fe;
     }
 
     /* REPORT CARD */
-
     .report-card {
       background: var(--card-bg);
       border-radius: var(--radius-xl);
@@ -177,26 +251,15 @@
       content: "";
       position: absolute;
       inset: -40%;
-      background: radial-gradient(
-        circle at top right,
-        rgba(56, 189, 248, 0.18),
-        transparent 60%
-      );
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 60%);
       opacity: 0.85;
       pointer-events: none;
     }
 
-    .report-inner {
-      position: relative;
-      z-index: 1;
-    }
+    .report-inner { position: relative; z-index: 1; }
 
     /* HEADER */
-
-    .report-header {
-      text-align: center;
-      margin-bottom: 18px;
-    }
+    .report-header { text-align: center; margin-bottom: 18px; }
 
     .report-pill {
       display: inline-flex;
@@ -212,9 +275,7 @@
       color: #a5f3fc;
     }
 
-    .report-pill span.icon {
-      font-size: 0.95rem;
-    }
+    .report-pill span.icon { font-size: 0.95rem; }
 
     .report-title {
       font-size: 1.3rem;
@@ -225,11 +286,7 @@
       margin-top: 10px;
     }
 
-    .report-subtitle {
-      margin-top: 6px;
-      font-size: 0.82rem;
-      color: var(--text-soft);
-    }
+    .report-subtitle { margin-top: 6px; font-size: 0.82rem; color: var(--text-soft); }
 
     .report-meta {
       display: flex;
@@ -252,17 +309,13 @@
     }
 
     /* SECTION FRAME */
-
     .section {
       position: relative;
       margin-top: 16px;
       padding-top: 14px;
       border-top: 1px solid rgba(148, 163, 184, 0.4);
     }
-
-    .section:first-of-type {
-      margin-top: 10px;
-    }
+    .section:first-of-type { margin-top: 10px; }
 
     .section-label {
       position: absolute;
@@ -279,15 +332,9 @@
       gap: 6px;
     }
 
-    .section-label-icon {
-      font-size: 0.85rem;
-    }
+    .section-label-icon { font-size: 0.85rem; }
 
-    .section-body {
-      font-size: 0.9rem;
-      line-height: 1.55;
-      color: var(--text-main);
-    }
+    .section-body { font-size: 0.9rem; line-height: 1.55; color: var(--text-main); }
 
     .pill-row {
       display: flex;
@@ -308,35 +355,17 @@
       gap: 4px;
     }
 
-    .pill strong {
-      color: var(--accent);
-      font-weight: 500;
-    }
+    .pill strong { color: var(--accent); font-weight: 500; }
 
-    .section-body p + p {
-      margin-top: 6px;
-    }
+    .section-body p + p { margin-top: 6px; }
 
-    .section-body ul {
-      list-style: none;
-      margin-top: 6px;
-      padding-left: 0;
-    }
+    .section-body ul { list-style: none; margin-top: 6px; padding-left: 0; }
 
-    .section-body ul li {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
-    }
+    .section-body ul li { display: flex; gap: 8px; margin-top: 4px; }
 
-    .bullet {
-      margin-top: 4px;
-      font-size: 0.7rem;
-      color: var(--accent);
-    }
+    .bullet { margin-top: 4px; font-size: 0.7rem; color: var(--accent); }
 
     /* SUPPORT GRID */
-
     .support-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -347,11 +376,7 @@
     .support-card {
       border-radius: var(--radius-lg);
       border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(
-        circle at top left,
-        rgba(56, 189, 248, 0.13),
-        rgba(15, 23, 42, 0.95)
-      );
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.13), rgba(15, 23, 42, 0.95));
       padding: 8px 10px;
       font-size: 0.84rem;
     }
@@ -364,18 +389,10 @@
       margin-bottom: 3px;
     }
 
-    .support-main {
-      color: var(--text-strong);
-      font-weight: 500;
-    }
-
-    .support-note {
-      color: var(--text-soft);
-      margin-top: 1px;
-    }
+    .support-main { color: var(--text-strong); font-weight: 500; }
+    .support-note { color: var(--text-soft); margin-top: 1px; }
 
     /* FOOTER */
-
     .report-footer {
       margin-top: 14px;
       padding-top: 10px;
@@ -385,49 +402,63 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
+      text-align: center;
     }
 
-    .footer-note-strong {
-      color: var(--accent);
-      font-weight: 500;
+    .footer-note-strong { color: var(--accent); font-weight: 500; }
+    .footer-tagline { opacity: 0.9; }
+
+    .report-owner {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.22);
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
     }
 
-    .footer-tagline {
-      opacity: 0.9;
+    .report-owner a {
+      color: #c7d2fe;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(199, 210, 254, 0.5);
     }
+    .report-owner a:hover { filter: brightness(1.12); }
 
     @media (min-width: 640px) {
-      .report-card {
-        padding: 24px 22px 24px;
-      }
-      .support-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      .report-title {
-        font-size: 1.45rem;
-      }
-    }
-
-    .placeholder-message {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-      margin-top: 6px;
+      .report-card { padding: 24px 22px 24px; }
+      .support-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .report-title { font-size: 1.45rem; }
+      .cta-bar { padding: 12px 12px; }
     }
   </style>
 </head>
+
 <body>
   <main class="app-shell">
     <!-- INPUT CARD -->
     <section class="input-card">
       <div class="input-inner">
         <div class="input-title">Chosen One Condition Report</div>
+
+        <!-- Revised: no “based on” language, no methodology disclosure -->
         <div class="input-sub">
-          Enter your birthdate and current time window. This generates a
-          conditions briefing based on natural law, numerology, and emotional
-          patterning. It does not predict the future.
+          Enter your birthdate and choose your time window to generate a conditions report.
+          This does <strong>not</strong> predict the future.
         </div>
+
+        <div class="tool-disclaimer" role="note" aria-label="Important note">
+          <strong>Important:</strong>
+          This generates a <strong>conditions report</strong>. It is <strong>not</strong> divination, tarot, or a “reading” —
+          and it does <strong>not</strong> predict the future.
+          <span class="dot">•</span>
+          Use this as reflection and awareness, not certainty.
+        </div>
+
         <form id="reportForm">
-          <div class="input-row">
+          <div class="input-row" style="margin-top:10px;">
             <div class="field">
               <label for="birthdate">Birthdate</label>
               <input id="birthdate" type="date" required />
@@ -441,17 +472,48 @@
               </select>
             </div>
           </div>
+
           <div class="btn-row">
             <button type="submit" class="btn-generate">
               <span class="icon">✦</span>
               <span>Generate Report</span>
             </button>
           </div>
+
           <div class="placeholder-message" id="placeholderMsg">
-            Your report will appear below. You can screenshot it, read it aloud,
-            or save it for later.
+            Your report will appear below. You can screenshot it, read it aloud, or save it for later.
           </div>
         </form>
+
+        <!-- TikTok CTA block (design-only, no IP leakage) -->
+        <section class="cta-bar" aria-label="Webmaster Eric TikTok links">
+          <div class="cta-top">
+            <div class="cta-title">
+              <span>⟡</span>
+              <span>Webmaster Eric</span>
+            </div>
+            <span class="badge">TikTok • Livestreams</span>
+          </div>
+
+          <div class="cta-copy">
+            Want your report read live, clipped, and sent to you?
+            Follow <strong>@webmaster_eric</strong> and join the livestreams —
+            or become a <strong>Superfan</strong> for priority access.
+          </div>
+
+          <div class="cta-actions">
+            <a class="btn-link" href="https://www.tiktok.com/@webmaster_eric" target="_blank" rel="noopener noreferrer">
+              ▶ Follow @webmaster_eric
+            </a>
+            <a class="btn-link primary" href="https://www.tiktok.com/t/ZPHE5yLvPJQNo-NlndN/" target="_blank" rel="noopener noreferrer">
+              ★ Become a Superfan
+            </a>
+          </div>
+
+          <div class="cta-fineprint">
+            Tip: Screenshot your generated report and bring it into the live.
+          </div>
+        </section>
       </div>
     </section>
 
@@ -466,8 +528,7 @@
           </div>
           <h1 class="report-title" id="reportTitle"></h1>
           <p class="report-subtitle">
-            Tuned to your birthdate and current conditions. Not a prediction —
-            a briefing.
+            A conditions briefing for reflection and awareness — not certainty.
           </p>
           <div class="report-meta">
             <span>📅 <span id="reportDate"></span></span>
@@ -505,18 +566,9 @@
           <div class="section-body">
             <p id="conditionsOverview"></p>
             <ul>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond1"></span>
-              </li>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond2"></span>
-              </li>
-              <li>
-                <span class="bullet">•</span>
-                <span id="cond3"></span>
-              </li>
+              <li><span class="bullet">•</span><span id="cond1"></span></li>
+              <li><span class="bullet">•</span><span id="cond2"></span></li>
+              <li><span class="bullet">•</span><span id="cond3"></span></li>
             </ul>
           </div>
         </section>
@@ -537,14 +589,8 @@
             <p id="testExplanation"></p>
             <p id="exposurePattern"></p>
             <ul>
-              <li>
-                <span class="bullet">→</span>
-                <span id="counter1"></span>
-              </li>
-              <li>
-                <span class="bullet">→</span>
-                <span id="counter2"></span>
-              </li>
+              <li><span class="bullet">→</span><span id="counter1"></span></li>
+              <li><span class="bullet">→</span><span id="counter2"></span></li>
             </ul>
           </div>
         </section>
@@ -559,12 +605,12 @@
             <p id="supportIntro"></p>
             <div class="support-grid">
               <div class="support-card">
-                <div class="support-title">Crystal</div>
+                <div class="support-title">Support</div>
                 <div class="support-main" id="crystalPrimary"></div>
                 <div class="support-note" id="crystalNote"></div>
               </div>
               <div class="support-card">
-                <div class="support-title">Scent / Candle</div>
+                <div class="support-title">Anchor</div>
                 <div class="support-main" id="scentPrimary"></div>
                 <div class="support-note" id="scentNote"></div>
               </div>
@@ -581,12 +627,26 @@
         <footer class="report-footer">
           <div class="footer-tagline">
             <span class="footer-note-strong">Reminder:</span>
-            This is a conditions report, not a prophecy. Use it to move with
-            more awareness, not more fear.
+            This is a conditions report — not divination, tarot, or a “reading” — and it does not predict the future.
           </div>
           <div>
-            Built on natural law, behavioral patterns, and numerology — for
-            Chosen Ones learning to navigate their own power.
+            Use this to move with more awareness, not more fear.
+          </div>
+
+          <div class="report-owner">
+            <div>
+              Want yours read live? Follow
+              <a href="https://www.tiktok.com/@webmaster_eric" target="_blank" rel="noopener noreferrer">
+                @webmaster_eric
+              </a>
+              and join the livestream.
+            </div>
+            <div>
+              Priority access:
+              <a href="https://www.tiktok.com/t/ZPHE5yLvPJQNo-NlndN/" target="_blank" rel="noopener noreferrer">
+                Become a Superfan
+              </a>
+            </div>
           </div>
         </footer>
       </div>
@@ -604,10 +664,7 @@
 
     function reduceToDigit(n) {
       while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
-        n = n
-          .toString()
-          .split("")
-          .reduce((sum, d) => sum + parseInt(d, 10), 0);
+        n = n.toString().split("").reduce((sum, d) => sum + parseInt(d, 10), 0);
       }
       return n;
     }
@@ -675,17 +732,14 @@
     function getElementDescription(element) {
       const map = {
         Fire: "Action-oriented, direct, energized by motion and challenge.",
-        Earth:
-          "Grounded, practical, steady, strengthened by routine and tangible progress.",
+        Earth: "Grounded, practical, steady, strengthened by routine and tangible progress.",
         Air: "Mental, communicative, curious, strengthened by clarity and ideas.",
-        Water:
-          "Emotional, intuitive, deep-feeling, strengthened by honest processing.",
+        Water: "Emotional, intuitive, deep-feeling, strengthened by honest processing.",
       };
       return map[element] || "";
     }
 
     function getCoreDrive(lifePath) {
-      // Enneagram-inspired, but framed as "drive"
       const mod = lifePath % 9 || 9;
       const map = {
         1: "Integrity & improvement — wanting things to be right, not sloppy.",
@@ -723,10 +777,8 @@
     }
 
     function getTimeWindow(mode) {
-      if (mode === "morning")
-        return "06:00 – 11:59 • Morning integration field";
-      if (mode === "afternoon")
-        return "12:00 – 17:59 • Active decision-making field";
+      if (mode === "morning") return "06:00 – 11:59 • Morning integration field";
+      if (mode === "afternoon") return "12:00 – 17:59 • Active decision-making field";
       return "18:00 – 02:00 • Reflection and recalibration field";
     }
 
@@ -738,68 +790,42 @@
 
     function getConditions(lifePath, element, mode) {
       const overviewBase =
-        "Today’s conditions are less about fate and more about how your nervous system will respond to pressure, interruption, and opportunity.";
+        "Current conditions are less about certainty and more about how you respond to pressure, interruption, and opportunity.";
       const points = [];
 
       if (element === "Fire") {
-        points.push(
-          "You may feel a push to act quickly. Pause once before you commit."
-        );
+        points.push("You may feel a push to act quickly. Pause once before you commit.");
       } else if (element === "Earth") {
-        points.push(
-          "You may cling to familiar routines. Make one small adjustment on purpose."
-        );
+        points.push("You may cling to familiar routines. Make one small adjustment on purpose.");
       } else if (element === "Air") {
-        points.push(
-          "Your mind may run ahead of your body. Slow the pace of your decisions."
-        );
+        points.push("Your mind may run ahead of your body. Slow the pace of your decisions.");
       } else if (element === "Water") {
-        points.push(
-          "Emotions may feel louder than usual. Let them move without making heavy conclusions."
-        );
+        points.push("Emotions may feel louder than usual. Let them move without making heavy conclusions.");
       }
 
       if ([1, 8, 9].includes(lifePath)) {
-        points.push(
-          "Leadership moments may appear in small ways. You do not have to overperform to be effective."
-        );
+        points.push("Leadership moments may appear in small ways. You do not have to overperform to be effective.");
       } else if ([2, 3, 6].includes(lifePath)) {
-        points.push(
-          "Relational energy is highlighted. Notice where you over-give or under-speak."
-        );
+        points.push("Relational energy is highlighted. Notice where you over-give or under-speak.");
       } else if ([7, 5].includes(lifePath)) {
-        points.push(
-          "You may analyze more than act. Choose one action from your thoughts instead of looping them."
-        );
+        points.push("You may analyze more than act. Choose one action from your thoughts instead of looping them.");
       }
 
       if (mode === "morning") {
-        points.push(
-          "How you start your day will echo. Even one grounded choice early can shift the tone."
-        );
+        points.push("How you start your day can echo. One grounded choice early can shift the tone.");
       } else if (mode === "afternoon") {
-        points.push(
-          "You may be tempted to override your body’s signals to stay productive. Listen instead of pushing through everything."
-        );
+        points.push("You may override your body’s signals to stay productive. Listen instead of pushing through everything.");
       } else {
-        points.push(
-          "Night thoughts may dramatize situations. Capture them, but make decisions in the next clear window."
-        );
+        points.push("Night thoughts may dramatize situations. Capture them, then decide in the next clear window.");
       }
 
-      return {
-        overview: overviewBase,
-        cond1: points[0] || "",
-        cond2: points[1] || "",
-        cond3: points[2] || "",
-      };
+      return { overview: overviewBase, cond1: points[0] || "", cond2: points[1] || "", cond3: points[2] || "" };
     }
 
     const SHADOWS = [
       {
         name: "The Doubter",
-        explanation:
-          "This pattern whispers that you are not ready or qualified, so you delay movement until the moment passes.",
+        explanation: "This pattern whispers that you are not ready or qualified, so you delay movement until the moment passes.",
         counters: [
           "Choose one small action that proves the doubt wrong instead of arguing with it.",
           "Treat doubt as a weather report, not a command. Notice it, then move anyway.",
@@ -807,8 +833,7 @@
       },
       {
         name: "The Echo",
-        explanation:
-          "This pattern replays old conversations, betrayals, or mistakes until your present moment feels contaminated by the past.",
+        explanation: "This pattern replays old conversations, betrayals, or mistakes until your present moment feels contaminated by the past.",
         counters: [
           "Label mental replays as past data. Ask, 'Is this happening now, or just echoing?'",
           "Introduce one response your old self never tried. That is how you exit the loop.",
@@ -816,8 +841,7 @@
       },
       {
         name: "The False Mirror",
-        explanation:
-          "This pattern makes you treat other people’s projections as truth about you, even when they are just showing you their fear.",
+        explanation: "This pattern makes you treat other people’s projections as truth about you, even when they are just showing you their fear.",
         counters: [
           "When you feel judged, ask, 'Whose standard is this?' and return what is not yours.",
           "Spend more time with people who respond to your truth, not just your image.",
@@ -825,8 +849,7 @@
       },
       {
         name: "The Fear-Mind",
-        explanation:
-          "This pattern builds worst-case futures and then treats them as inevitable, so you abandon aligned paths too early.",
+        explanation: "This pattern builds worst-case futures and then treats them as inevitable, so you abandon aligned paths too early.",
         counters: [
           "Write down the worst-case story, then write a second story where you move with courage.",
           "Take one low-risk step toward the aligned path and let reality, not fear, give feedback.",
@@ -834,8 +857,7 @@
       },
       {
         name: "The Distraction Demon",
-        explanation:
-          "This pattern keeps you scrolling, over-talking, or busy with everyone else’s life so you never sit with your own.",
+        explanation: "This pattern keeps you scrolling, over-talking, or busy with everyone else’s life so you never sit with your own.",
         counters: [
           "Set a 20–25 minute focus block for one meaningful task and protect it like an appointment.",
           "Delay distraction by five minutes when the urge hits. Often the wave will pass.",
@@ -843,8 +865,7 @@
       },
       {
         name: "The Abandonment Child",
-        explanation:
-          "This pattern panics when people pull back, and it pushes you into chasing or over-explaining to feel safe.",
+        explanation: "This pattern panics when people pull back, and it pushes you into chasing or over-explaining to feel safe.",
         counters: [
           "Before you send a reactive message, give yourself 30 minutes and one grounding activity.",
           "Remind yourself that distance does not automatically equal rejection.",
@@ -852,8 +873,7 @@
       },
       {
         name: "The Ego Beast",
-        explanation:
-          "This pattern makes every interaction about being right, validated, or seen as superior instead of being aligned.",
+        explanation: "This pattern makes every interaction about being right, validated, or seen as superior instead of being aligned.",
         counters: [
           "When you feel the need to prove a point, pause and ask, 'What do I actually want from this moment?'",
           "Practice letting one small thing go without defending yourself and notice that you remain intact.",
@@ -862,134 +882,43 @@
     ];
 
     const TESTS = [
-      {
-        name: "The Mirror Response",
-        explanation:
-          "When you stand in your truth, other people’s insecurities can surface as criticism, distance, or subtle competition.",
-      },
-      {
-        name: "The Threshold Test",
-        explanation:
-          "As you raise your standards, people may test your boundaries to see if the change is real or temporary.",
-      },
-      {
-        name: "The Manipulation Loop",
-        explanation:
-          "Your stability can attract people who use guilt, flattery, or pressure to secure access to your energy.",
-      },
-      {
-        name: "The Saboteur Response",
-        explanation:
-          "Some people around you may unconsciously pull you back toward old versions of yourself to feel safer.",
-      },
-      {
-        name: "The Temptation Trigger",
-        explanation:
-          "Old habits, people, or patterns may resurface not as a sign, but as a chance to choose differently.",
-      },
-      {
-        name: "The Identity Collision",
-        explanation:
-          "Your old identity and your emerging self may clash, creating tension in how others respond to your growth.",
-      },
-      {
-        name: "The Energy Drainer Test",
-        explanation:
-          "You may be asked to carry emotional weight that is not yours simply because you feel more stable.",
-      },
-      {
-        name: "The Doubt Seed",
-        explanation:
-          "Comments from others may plant small doubts about your path, especially when you are close to a shift.",
-      },
+      { name: "The Mirror Response", explanation: "When you stand in your truth, other people’s insecurities can surface as criticism, distance, or subtle competition." },
+      { name: "The Threshold Test", explanation: "As you raise your standards, people may test your boundaries to see if the change is real or temporary." },
+      { name: "The Manipulation Loop", explanation: "Your stability can attract people who use guilt, flattery, or pressure to secure access to your energy." },
+      { name: "The Saboteur Response", explanation: "Some people around you may unconsciously pull you back toward old versions of yourself to feel safer." },
+      { name: "The Temptation Trigger", explanation: "Old habits, people, or patterns may resurface not as a sign, but as a chance to choose differently." },
+      { name: "The Identity Collision", explanation: "Your old identity and your emerging self may clash, creating tension in how others respond to your growth." },
+      { name: "The Energy Drainer Test", explanation: "You may be asked to carry emotional weight that is not yours simply because you feel more stable." },
+      { name: "The Doubt Seed", explanation: "Comments from others may plant small doubts about your path, especially when you are close to a shift." },
     ];
 
     const EMOTIONS = [
-      "Calmness",
-      "Anxiety",
-      "Grounded Focus",
-      "Restless Energy",
-      "Curiosity",
-      "Quiet Sadness",
-      "Nostalgia",
-      "Determination",
-      "Overwhelm",
-      "Relief",
-      "Protectiveness",
-      "Vulnerability",
-      "Irritation",
-      "Gratitude",
-      "Resentment",
-      "Hopefulness",
-      "Disappointment",
-      "Cautious Optimism",
-      "Emotional Tiredness",
-      "Excitement",
-      "Confusion",
-      "Clarity",
-      "Loneliness",
-      "Sense of Purpose",
-      "Emotional Numbness",
-      "Empathic Pain",
-      "Awe",
+      "Calmness","Anxiety","Grounded Focus","Restless Energy","Curiosity","Quiet Sadness","Nostalgia","Determination",
+      "Overwhelm","Relief","Protectiveness","Vulnerability","Irritation","Gratitude","Resentment","Hopefulness",
+      "Disappointment","Cautious Optimism","Emotional Tiredness","Excitement","Confusion","Clarity","Loneliness",
+      "Sense of Purpose","Emotional Numbness","Empathic Pain","Awe",
     ];
 
     function getSupport(element) {
       const crystalByElement = {
-        Fire: {
-          crystal: "Carnelian or Citrine",
-          note: "Supports courage, visible action, and forward motion without burnout.",
-        },
-        Earth: {
-          crystal: "Black Tourmaline or Smoky Quartz",
-          note: "Supports grounding, stability, and protection when you feel overloaded.",
-        },
-        Air: {
-          crystal: "Amethyst or Lapis Lazuli",
-          note: "Supports mental clarity, calm thinking, and focused communication.",
-        },
-        Water: {
-          crystal: "Rose Quartz or Moonstone",
-          note: "Supports emotional processing, self-compassion, and gentle release.",
-        },
+        Fire: { crystal: "Carnelian or Citrine", note: "Supports courage and forward motion without burnout." },
+        Earth: { crystal: "Black Tourmaline or Smoky Quartz", note: "Supports grounding and stability when things feel heavy." },
+        Air: { crystal: "Amethyst or Lapis Lazuli", note: "Supports clarity and clean communication." },
+        Water: { crystal: "Rose Quartz or Moonstone", note: "Supports emotional processing and gentle release." },
       };
 
       const scentByElement = {
-        Fire: {
-          scent: "Citrus (orange, bergamot) or cinnamon",
-          note: "Keeps energy bright but controlled so you move with intention, not impulse.",
-        },
-        Earth: {
-          scent: "Sandalwood, vetiver, or cedarwood",
-          note: "Deepens grounding and helps you feel steady when things around you move quickly.",
-        },
-        Air: {
-          scent: "Peppermint, eucalyptus, or rosemary",
-          note: "Clears mental fog and supports clear decisions without overthinking everything.",
-        },
-        Water: {
-          scent: "Lavender, jasmine, or frankincense",
-          note: "Soothes emotional spikes and makes it easier to rest your nervous system.",
-        },
+        Fire: { scent: "Citrus (orange, bergamot) or cinnamon", note: "Brightens energy while helping you stay intentional." },
+        Earth: { scent: "Sandalwood, vetiver, or cedarwood", note: "Deepens grounding when everything around you moves fast." },
+        Air: { scent: "Peppermint, eucalyptus, or rosemary", note: "Clears mental fog and supports clean decisions." },
+        Water: { scent: "Lavender, jasmine, or frankincense", note: "Soothes emotional spikes and supports calm rest." },
       };
 
       const actionMap = {
-        Fire: {
-          action: "Take a 10–15 minute walk without your phone.",
-          note: "Let your body move so your mind can slow down and reset.",
-        },
-        Earth: {
-          action: "Organize one small physical space around you.",
-          note: "Bringing order to your environment supports clarity in your decisions.",
-        },
-        Air: {
-          action: "Write down the three thoughts circling the most today.",
-          note: "Once they are on paper, you can choose which ones deserve action.",
-        },
-        Water: {
-          action: "Name your main feeling in one sentence and breathe with it.",
-          note: "Feelings ease when they are acknowledged instead of argued with.",
-        },
+        Fire: { action: "Take a 10–15 minute walk without your phone.", note: "Let the body move so the mind can slow down." },
+        Earth: { action: "Organize one small physical space around you.", note: "Order in your environment supports order in decisions." },
+        Air: { action: "Write down the three thoughts circling most today.", note: "Once on paper, you can choose what deserves action." },
+        Water: { action: "Name your main feeling in one sentence and breathe.", note: "Feelings ease when acknowledged instead of argued with." },
       };
 
       return {
@@ -1000,33 +929,23 @@
     }
 
     function getExposurePattern(center, element) {
-      // How they tend to be tested / used, in grounded language
       if (center.startsWith("Heart")) {
         return "Because you feel deeply, people who are less regulated may lean on your empathy without giving the same care back. Your test is to support without self-erasing.";
       }
       if (center.startsWith("Body")) {
-        return "Because you move first and carry weight well, others may quietly expect you to always 'handle it.' Your test is to notice when responsibility stops being shared.";
+        return "Because you move first and carry weight well, others may expect you to always handle it. Your test is to notice when responsibility stops being shared.";
       }
       if (center.startsWith("Head")) {
-        return "Because you can see angles and patterns, people may come to you for answers but ignore your limits. Your test is to stop over-explaining when you feel drained.";
+        return "Because you can see angles and patterns, people may come for answers but ignore your limits. Your test is to stop over-explaining when you feel drained.";
       }
       if (center.startsWith("Integrated")) {
         return "Because you can read the room on multiple levels, some people may treat you like emotional infrastructure. Your test is to remember you are a person, not a system.";
       }
-      // fallback by element
-      if (element === "Fire") {
-        return "Your drive and intensity can attract people who want progress without doing their share. Your test is to protect your energy from being used as free fuel.";
-      }
-      if (element === "Earth") {
-        return "Your reliability can make people assume you will always be there, even when they are careless. Your test is to notice when stability turns into quiet resentment.";
-      }
-      if (element === "Air") {
-        return "Your communication and ideas can be borrowed without proper credit. Your test is to protect your concepts and value your clarity as an asset.";
-      }
-      if (element === "Water") {
-        return "Your emotional range can make you the unofficial therapist for everyone around you. Your test is to stop absorbing what others refuse to manage.";
-      }
-      return "Your sensitivity and strength can both be targeted. Your test is to notice where access to you is taken for granted instead of appreciated.";
+      if (element === "Fire") return "Your intensity can attract people who want progress without doing their share. Protect your energy from being used as free fuel.";
+      if (element === "Earth") return "Your reliability can make people assume you’ll always be there. Notice when stability turns into resentment.";
+      if (element === "Air") return "Your ideas can be borrowed without proper credit. Protect your clarity as an asset.";
+      if (element === "Water") return "Your emotional range can make you the unofficial therapist. Stop absorbing what others refuse to manage.";
+      return "Your sensitivity and strength can both be targeted. Notice where access to you is taken for granted instead of appreciated.";
     }
 
     document.getElementById("reportForm").addEventListener("submit", function (e) {
@@ -1036,16 +955,10 @@
       const mode = document.getElementById("mode").value;
       const msg = document.getElementById("placeholderMsg");
 
-      if (!birthInput) {
-        alert("Please enter a valid birthdate.");
-        return;
-      }
+      if (!birthInput) { alert("Please enter a valid birthdate."); return; }
 
       const birthDateObj = new Date(birthInput + "T12:00:00");
-      if (isNaN(birthDateObj.getTime())) {
-        alert("Please enter a valid birthdate.");
-        return;
-      }
+      if (isNaN(birthDateObj.getTime())) { alert("Please enter a valid birthdate."); return; }
 
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
@@ -1063,11 +976,7 @@
       const moonPhase = getMoonPhaseName(today);
       const windowLabel = getTimeWindow(mode);
 
-      const dateDisplay = today.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+      const dateDisplay = today.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 
       const conditions = getConditions(lifePath, element, mode);
 
@@ -1079,8 +988,7 @@
       const exposureLine = getExposurePattern(center, element);
 
       // Fill header
-      document.getElementById("reportTitle").textContent =
-        mode.charAt(0).toUpperCase() + mode.slice(1) + " Briefing";
+      document.getElementById("reportTitle").textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + " Briefing";
       document.getElementById("reportDate").textContent = dateDisplay;
       document.getElementById("reportWindow").textContent = windowLabel;
       document.getElementById("moonPhase").textContent = moonPhase;
@@ -1094,21 +1002,15 @@
       document.getElementById("centerType").textContent = center;
       document.getElementById("coreDrive").textContent = coreDrive;
 
+      // Keep copy neutral (no methodology disclosure)
       document.getElementById("coreBlueprintSummary").textContent =
-        "Your core field reads as a Chosen One whose life path number " +
-        lifePath +
-        " combines with a " +
-        element.toLowerCase() +
-        " temperament in the sign of " +
-        sign +
-        ". This shapes how you handle pressure, opportunity, and emotional intensity.";
+        "This briefing reflects your baseline tendencies and how they may interact with today’s conditions. Use it to notice patterns, not to lock in conclusions.";
 
       document.getElementById("coreStrengthsWeaknesses").textContent =
-        "Your strengths live where your natural instincts and your values overlap. Your growth edge lives where you feel pulled to abandon yourself to keep the peace, stay comfortable, or avoid being seen.";
+        "Your strengths show up where your instincts and values align. Your growth edge shows up where you abandon yourself to keep peace, stay comfortable, or avoid being seen.";
 
       // Conditions
-      document.getElementById("conditionsOverview").textContent =
-        conditions.overview;
+      document.getElementById("conditionsOverview").textContent = conditions.overview;
       document.getElementById("cond1").textContent = conditions.cond1;
       document.getElementById("cond2").textContent = conditions.cond2;
       document.getElementById("cond3").textContent = conditions.cond3;
@@ -1116,37 +1018,29 @@
       // Shadow & Test
       document.getElementById("shadowName").textContent = shadow.name;
       document.getElementById("emotionName").textContent = emotion;
-      document.getElementById("shadowExplanation").textContent =
-        shadow.explanation;
+      document.getElementById("shadowExplanation").textContent = shadow.explanation;
       document.getElementById("testName").textContent = test.name;
-      document.getElementById("testExplanation").textContent =
-        test.explanation;
+      document.getElementById("testExplanation").textContent = test.explanation;
       document.getElementById("exposurePattern").textContent = exposureLine;
       document.getElementById("counter1").textContent = shadow.counters[0];
       document.getElementById("counter2").textContent = shadow.counters[1];
 
       // Support kit
       document.getElementById("supportIntro").textContent =
-        "Support tools are not magic. They help your nervous system match the decisions you are trying to make. Use them as anchors, not as shortcuts.";
+        "Support tools are not magic. They help you regulate and choose with clarity. Use them as anchors — not shortcuts.";
 
-      document.getElementById("crystalPrimary").textContent =
-        support.crystal.crystal;
-      document.getElementById("crystalNote").textContent =
-        support.crystal.note;
+      document.getElementById("crystalPrimary").textContent = support.crystal.crystal;
+      document.getElementById("crystalNote").textContent = support.crystal.note;
 
-      document.getElementById("scentPrimary").textContent =
-        support.scent.scent;
+      document.getElementById("scentPrimary").textContent = support.scent.scent;
       document.getElementById("scentNote").textContent = support.scent.note;
 
-      document.getElementById("actionPrimary").textContent =
-        support.action.action;
-      document.getElementById("actionNote").textContent =
-        support.action.note;
+      document.getElementById("actionPrimary").textContent = support.action.action;
+      document.getElementById("actionNote").textContent = support.action.note;
 
       // Show report
       document.getElementById("reportCard").style.display = "block";
-      msg.textContent =
-        "Report generated. You can scroll, screenshot, or read it aloud.";
+      msg.textContent = "Report generated. You can scroll, screenshot, or bring it into the livestream.";
     });
   </script>
 </body>
